@@ -786,4 +786,804 @@
           <div class="league-title-label" style="color:var(--ucl-blue);">⭐ UEFA CHAMPIONS LEAGUE</div>
           <div class="league-title-name">UCL Group Stage</div>
         </div>
-        <div class="season-tag" style="border-color:var(-
+        <div class="season-tag" style="border-color:var(--ucl-blue); color:var(--ucl-blue);">Group A</div>
+      </div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 30px;">Pos</th>
+              <th style="text-align: left;">Club</th>
+              <th>P</th>
+              <th>W</th>
+              <th>D</th>
+              <th>L</th>
+              <th>GF</th>
+              <th>GA</th>
+              <th>GD</th>
+              <th class="pts-col" style="color:var(--ucl-blue);">PTS</th>
+            </tr>
+          </thead>
+          <tbody id="uclGroupTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="legend-card" style="border-color: rgba(59, 130, 246, 0.4);">
+        <div class="legend-heading" style="color:var(--ucl-blue);">Qualification</div>
+        <div class="legend-row">
+          <div class="ucl-square"></div>
+          <span>Group champion direct final</span>
+        </div>
+      </div>
+
+      <div class="legend-card" style="margin-top: 20px;">
+        <div class="league-title-label" style="color:var(--ucl-blue); margin-bottom:12px;">🏆 UCL KNOCKOUT STAGE</div>
+        
+        <div class="bracket-container">
+          <div>
+            <div class="bracket-stage-title">Semi Final</div>
+            <div class="bracket-match">
+              <div class="bracket-row">
+                <span id="semiHomeName">Real</span>
+                <span class="bracket-score" id="semiHomeScore">3</span>
+              </div>
+              <div class="bracket-row">
+                <span id="semiAwayName">Monaco</span>
+                <span class="bracket-score" id="semiAwayScore">2</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bracket-connector"></div>
+
+          <div>
+            <div class="bracket-stage-title">Final</div>
+            <div class="bracket-match">
+              <div class="bracket-row">
+                <span id="finalHomeName">Real Madrid</span>
+                <span class="bracket-score" id="finalHomeScore">2</span>
+              </div>
+              <div class="bracket-row">
+                <span id="finalAwayName">Sparta FC</span>
+                <span class="bracket-score" id="finalAwayScore">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ucl-trophy-podium">
+          <svg class="ucl-trophy-svg" viewBox="0 0 100 100" fill="none">
+            <path d="M30 20 H70 V42 C70 58 58 70 50 70 C42 70 30 58 30 42 Z" fill="url(#trophyGrad)" stroke="#ffd700" stroke-width="2"/>
+            <path d="M30 24 C20 24 16 35 16 46 C16 58 26 62 34 60 L32 55 C26 56 22 52 22 46 C22 38 25 30 30 29 Z" fill="#ffd700"/>
+            <path d="M70 24 C80 24 84 35 84 46 C84 58 74 62 66 60 L68 55 C74 56 78 52 78 46 C78 38 75 30 70 29 Z" fill="#ffd700"/>
+            <rect x="44" y="70" width="12" height="15" fill="#ffd700"/>
+            <path d="M34 85 H66 V92 H34 Z" fill="#e2e8f0" stroke="#ffd700" stroke-width="1.5"/>
+            <defs>
+              <linearGradient id="trophyGrad" x1="30" y1="20" x2="70" y2="70" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ffffff"/>
+                <stop offset="0.5" stop-color="#cbd5e1"/>
+                <stop offset="1" stop-color="#94a3b8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <div class="podium-winner-name" id="uclWinnerName">Real Madrid</div>
+          <span class="podium-champion-badge">Champions</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TROPHIES TAB (Active by default for review) -->
+    <div id="page-trophies" class="view-card active">
+      <div class="league-banner">
+        <div>
+          <div class="league-title-label" style="color:var(--gold);">🏆 TROPHY CABINET</div>
+          <div class="league-title-name">Hall of Fame</div>
+        </div>
+      </div>
+
+      <!-- Column 1: Total Trophies Titles -->
+      <div class="trophy-section">
+        <div class="trophy-category-header" style="color:var(--gold);">
+          <span>🥇 Total Trophies Titles</span>
+        </div>
+        <div class="table-card">
+          <table class="trophy-table">
+            <thead>
+              <tr>
+                <th style="width: 34px;">#</th>
+                <th style="text-align: left;">Club</th>
+                <th style="text-align: right;">Total</th>
+              </tr>
+            </thead>
+            <tbody id="trophiesTotalBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Column 2: League Titles -->
+      <div class="trophy-section">
+        <div class="trophy-category-header" style="color:var(--accent);">
+          <span>🛡️ League Titles</span>
+        </div>
+        <div class="table-card">
+          <table class="trophy-table">
+            <thead>
+              <tr>
+                <th style="width: 34px;">#</th>
+                <th style="text-align: left;">Club</th>
+                <th style="text-align: right;">Titles</th>
+              </tr>
+            </thead>
+            <tbody id="trophiesLeagueBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Column 3: UCL Titles -->
+      <div class="trophy-section">
+        <div class="trophy-category-header" style="color:var(--ucl-blue);">
+          <span>⭐ UCL Titles</span>
+        </div>
+        <div class="table-card">
+          <table class="trophy-table">
+            <thead>
+              <tr>
+                <th style="width: 34px;">#</th>
+                <th style="text-align: left;">Club</th>
+                <th style="text-align: right;">Titles</th>
+              </tr>
+            </thead>
+            <tbody id="trophiesUclBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ADMIN TAB WITH BATMAN67 PASSCODE LOCK -->
+    <div id="page-admin" class="view-card">
+      <div class="league-banner">
+        <div>
+          <div class="league-title-label">🔒 CCNN CONTROL</div>
+          <div class="league-title-name">Admin Center</div>
+        </div>
+      </div>
+
+      <!-- Password Prompt Card -->
+      <div id="adminLockScreen" class="admin-lock-screen">
+        <svg class="lock-icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <h3 style="font-size: 16px; margin-bottom: 6px; text-transform: uppercase;">Admin Access Required</h3>
+        <p style="font-size: 12px; color: var(--muted); margin-bottom: 16px;">Enter the secret key to unlock manager privileges.</p>
+        <input type="password" id="adminPasswordInput" placeholder="Enter PIN / Key" style="text-align:center; letter-spacing: 3px; max-width: 220px; margin: 0 auto 10px auto;">
+        <button class="btn" style="max-width: 220px; margin: 0 auto;" onclick="checkAdminPassword()">Unlock Admin</button>
+      </div>
+
+      <!-- Protected Admin Panel -->
+      <div id="adminUnlockedContent" style="display:none;">
+
+        <!-- Accordion 1: League Customization -->
+        <div class="admin-accordion">
+          <div class="admin-accordion-header" onclick="toggleAccordion(this)">
+            <span>1. League Settings</span>
+            <span>▾</span>
+          </div>
+          <div class="admin-accordion-body open">
+            <div class="form-group">
+              <label>League Name</label>
+              <input type="text" id="adminLeagueNameInput" placeholder="e.g. CCNN Super League">
+              <button class="btn" onclick="updateLeagueName()">Save League Name</button>
+            </div>
+
+            <div class="form-group">
+              <label>UCL Qualification Spots</label>
+              <select id="adminUclSpotsSelect" onchange="updateUclSpots()">
+                <option value="1">Top 1 Team</option>
+                <option value="2">Top 2 Teams</option>
+                <option value="3">Top 3 Teams</option>
+                <option value="4" selected>Top 4 Teams</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Add Team to League</label>
+              <input type="text" id="adminNewTeamName" placeholder="New Team Name">
+              <button class="btn" onclick="addNewTeam()">Add Club</button>
+            </div>
+
+            <div class="form-group">
+              <label>Delete Team from League</label>
+              <select id="adminDeleteTeamSelect" style="margin-bottom: 6px;"></select>
+              <button class="btn btn-danger" onclick="deleteSelectedTeam()">Remove Team</button>
+            </div>
+
+            <div class="form-group">
+              <label>Finish Season & Award League Trophy</label>
+              <button class="btn btn-gold" onclick="finishCurrentSeason()">🏆 Finish League & Crown #1</button>
+            </div>
+
+            <div class="form-group">
+              <label>Reset League Results</label>
+              <button class="btn btn-danger" onclick="restartLeagueData()">⚠️ Restart League</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 2: Fixtures & Scores with UCL or League Selector -->
+        <div class="admin-accordion">
+          <div class="admin-accordion-header" onclick="toggleAccordion(this)">
+            <span>2. Match Fixtures & Scores</span>
+            <span>▾</span>
+          </div>
+          <div class="admin-accordion-body open">
+            <div class="form-group">
+              <label>Competition Mode</label>
+              <select id="fixtureCompType" style="margin-bottom:8px;">
+                <option value="League">🛡️ League Match</option>
+                <option value="UCL">⭐ UCL Match</option>
+              </select>
+
+              <label>Select Clubs</label>
+              <select id="fixtureHomeTeam" style="margin-bottom:6px;"></select>
+              <select id="fixtureAwayTeam" style="margin-bottom:6px;"></select>
+              <input type="text" id="fixtureDateInput" placeholder="Date/Time (e.g. Sat, 8:00 PM)">
+              <button class="btn" onclick="scheduleFixture()">Save Fixture</button>
+            </div>
+
+            <div class="form-group">
+              <label>Update Scorecards</label>
+              <div id="adminFixtureUpdateList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 3: UCL Knockouts & Crown Champion -->
+        <div class="admin-accordion">
+          <div class="admin-accordion-header" onclick="toggleAccordion(this)">
+            <span>3. UCL Knockout & Champion Settings</span>
+            <span>▾</span>
+          </div>
+          <div class="admin-accordion-body">
+            <div class="form-group">
+              <label>Semi Final Scores</label>
+              <input type="text" id="setSemiHome" placeholder="Home Team" style="margin-bottom:4px;">
+              <input type="number" id="setSemiHScore" placeholder="Score" style="margin-bottom:4px;">
+              <input type="text" id="setSemiAway" placeholder="Away Team" style="margin-bottom:4px;">
+              <input type="number" id="setSemiAScore" placeholder="Score">
+            </div>
+            <div class="form-group">
+              <label>Final Scores</label>
+              <input type="text" id="setFinalHome" placeholder="Home Team" style="margin-bottom:4px;">
+              <input type="number" id="setFinalHScore" placeholder="Score" style="margin-bottom:4px;">
+              <input type="text" id="setFinalAway" placeholder="Away Team" style="margin-bottom:4px;">
+              <input type="number" id="setFinalAScore" placeholder="Score">
+            </div>
+            <div class="form-group">
+              <label>Award UCL Title To Club</label>
+              <select id="adminAwardUclSelect" style="margin-bottom:6px;"></select>
+              <button class="btn btn-gold" onclick="updateUclKnockoutsAndCrown()">Save & Crown UCL Champion</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Bottom Floating Glass Navigation Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-item" onclick="switchTab('home')">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>Home</span>
+    </button>
+
+    <button class="nav-item" onclick="switchTab('league')">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="3" y1="9" x2="21" y2="9"></line>
+        <line x1="9" y1="21" x2="9" y2="9"></line>
+      </svg>
+      <span>League</span>
+    </button>
+
+    <button class="nav-item" onclick="switchTab('fixtures')">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <span>Matches</span>
+    </button>
+
+    <button class="nav-item" onclick="switchTab('ucl')">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+      <span>UCL</span>
+    </button>
+
+    <button class="nav-item active" onclick="switchTab('trophies')">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"></path>
+        <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"></path>
+        <path d="M4 22h16"></path>
+        <path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"></path>
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
+      </svg>
+      <span>Trophies</span>
+    </button>
+
+    <button class="nav-item" onclick="switchTab('admin')">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+      <span>Admin</span>
+    </button>
+  </nav>
+
+  <script>
+    const STORAGE_KEY = 'CCNN_COMPREHENSIVE_STATE';
+    let isAdminAuthenticated = false;
+
+    let state = {
+      leagueName: 'CCNN Super League',
+      season: 1,
+      uclSpots: 4,
+      teams: [
+        { id: '1', name: 'Real Madrid', leagueTitles: 4, uclTitles: 15 },
+        { id: '2', name: 'Japan', leagueTitles: 1, uclTitles: 5 },
+        { id: '3', name: 'Liverpool', leagueTitles: 1, uclTitles: 0 },
+        { id: '4', name: 'Sparta FC', leagueTitles: 0, uclTitles: 0 }
+      ],
+      fixtures: [
+        { id: 'f1', comp: 'League', homeId: '1', awayId: '3', time: 'Today, 8:00 PM' },
+        { id: 'f2', comp: 'UCL', homeId: '1', awayId: '2', time: 'Tomorrow, 9:30 PM' }
+      ],
+      results: [
+        { id: 'r1', comp: 'League', homeId: '1', awayId: '4', hScore: 3, aScore: 1, time: 'Yesterday' }
+      ],
+      ucl: {
+        semiHome: 'Real',
+        semiHScore: 3,
+        semiAway: 'Monaco',
+        semiAScore: 2,
+        finalHome: 'Real Madrid',
+        finalHScore: 2,
+        finalAway: 'Sparta FC',
+        finalAScore: 1,
+        champion: 'Real Madrid'
+      }
+    };
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try { state = JSON.parse(saved); } catch (e) {}
+      }
+
+      state.teams.forEach(t => {
+        if (t.leagueTitles === undefined) t.leagueTitles = t.trophies || 0;
+        if (t.uclTitles === undefined) t.uclTitles = 0;
+      });
+
+      renderAll();
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderAll();
+    }
+
+    function switchTab(tabKey) {
+      document.querySelectorAll('.view-card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById('page-' + tabKey);
+      if (target) target.classList.add('active');
+
+      const buttons = document.querySelectorAll('.nav-item');
+      buttons.forEach(btn => {
+        if (btn.querySelector('span').textContent.toLowerCase().includes(tabKey.toLowerCase())) {
+          btn.classList.add('active');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function checkAdminPassword() {
+      const entered = document.getElementById('adminPasswordInput').value.trim();
+      if (entered === 'batman67') {
+        isAdminAuthenticated = true;
+        document.getElementById('adminLockScreen').style.display = 'none';
+        document.getElementById('adminUnlockedContent').style.display = 'block';
+      } else {
+        alert('Access Denied: Incorrect Password');
+      }
+    }
+
+    function toggleAccordion(el) {
+      const body = el.nextElementSibling;
+      body.classList.toggle('open');
+    }
+
+    function toggleMatches(subTab, btnEl) {
+      document.querySelectorAll('.match-toggle-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+
+      if (subTab === 'fixtures') {
+        document.getElementById('sub-fixtures').style.display = 'block';
+        document.getElementById('sub-results').style.display = 'none';
+      } else {
+        document.getElementById('sub-fixtures').style.display = 'none';
+        document.getElementById('sub-results').style.display = 'block';
+      }
+    }
+
+    function getTeam(id) {
+      return state.teams.find(t => t.id === id) || { name: 'Unknown Club' };
+    }
+
+    function calculateStandings() {
+      const standings = state.teams.map(t => ({
+        id: t.id,
+        name: t.name,
+        p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0,
+        form: []
+      }));
+
+      state.results.filter(r => r.comp !== 'UCL').forEach(r => {
+        const home = standings.find(t => t.id === r.homeId);
+        const away = standings.find(t => t.id === r.awayId);
+        if (!home || !away) return;
+
+        home.p++; away.p++;
+        home.gf += r.hScore; home.ga += r.aScore;
+        away.gf += r.aScore; away.ga += r.hScore;
+        home.gd = home.gf - home.ga;
+        away.gd = away.gf - away.ga;
+
+        if (r.hScore > r.aScore) {
+          home.w++; home.pts += 3; away.l++;
+          home.form.push('W'); away.form.push('L');
+        } else if (r.hScore < r.aScore) {
+          away.w++; away.pts += 3; home.l++;
+          away.form.push('W'); home.form.push('L');
+        } else {
+          home.d++; away.d++; home.pts += 1; away.pts += 1;
+          home.form.push('D'); away.form.push('D');
+        }
+      });
+
+      return standings.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
+    }
+
+    function renderAll() {
+      document.querySelectorAll('.current-league-tag').forEach(tag => {
+        tag.textContent = '🏆 ' + state.leagueName.toUpperCase();
+      });
+      document.getElementById('leagueHeaderName').textContent = state.leagueName;
+      document.getElementById('leagueSeasonTag').textContent = 'Season ' + state.season;
+      document.getElementById('uclSpotsLabel').textContent = 'Top ' + state.uclSpots;
+
+      const table = calculateStandings();
+      document.getElementById('homeLeaderDisplay').textContent = table[0] ? table[0].name : '--';
+
+      // 1. League Table
+      const tbody = document.getElementById('leagueTableBody');
+      tbody.innerHTML = table.map((t, idx) => {
+        const isUcl = idx < state.uclSpots;
+        const formHtml = [0,1,2,3,4].map(i => {
+          const outcome = t.form[t.form.length - 1 - i];
+          if (outcome === 'W') return `<span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>`;
+          if (outcome === 'D') return `<span class="status-badge badge-draw"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line></svg></span>`;
+          if (outcome === 'L') return `<span class="status-badge badge-loss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>`;
+          return `<span class="status-badge badge-unplayed"></span>`;
+        }).join('');
+
+        const gdClass = t.gd > 0 ? 'gd-positive' : (t.gd < 0 ? 'gd-negative' : '');
+        const gdSign = t.gd > 0 ? '+' : '';
+
+        return `
+          <tr class="${isUcl ? 'ucl-qualify' : ''}">
+            <td>${idx + 1}</td>
+            <td class="team-col">
+              <span class="team-badge">${t.name.charAt(0)}</span>
+              <span>${t.name}</span>
+            </td>
+            <td>${t.p}</td>
+            <td>${t.w}</td>
+            <td>${t.d}</td>
+            <td>${t.l}</td>
+            <td>${t.gf}</td>
+            <td>${t.ga}</td>
+            <td class="${gdClass}">${gdSign}${t.gd}</td>
+            <td class="pts-col">${t.pts}</td>
+            <td><div class="match-strip">${formHtml}</div></td>
+          </tr>
+        `;
+      }).join('');
+
+      // 2. UCL Group Table
+      const uclTableBody = document.getElementById('uclGroupTableBody');
+      const uclQualifiedClubs = table.slice(0, state.uclSpots);
+      uclTableBody.innerHTML = uclQualifiedClubs.map((t, idx) => {
+        const isGroupChamp = idx === 0;
+        const gdClass = t.gd > 0 ? 'gd-positive' : (t.gd < 0 ? 'gd-negative' : '');
+        const gdSign = t.gd > 0 ? '+' : '';
+
+        return `
+          <tr class="${isGroupChamp ? 'ucl-qualify' : ''}">
+            <td>${idx + 1}</td>
+            <td class="team-col">
+              <span class="team-badge" style="border-color:var(--ucl-blue);">${t.name.charAt(0)}</span>
+              <span>${t.name}</span>
+            </td>
+            <td>${t.p}</td>
+            <td>${t.w}</td>
+            <td>${t.d}</td>
+            <td>${t.l}</td>
+            <td>${t.gf}</td>
+            <td>${t.ga}</td>
+            <td class="${gdClass}">${gdSign}${t.gd}</td>
+            <td class="pts-col" style="color:var(--ucl-blue); font-weight:900;">${t.pts}</td>
+          </tr>
+        `;
+      }).join('') || '<tr><td colspan="10" style="padding:14px; color:var(--muted);">No teams in group stage.</td></tr>';
+
+      // 3. UCL Knockouts Display
+      document.getElementById('semiHomeName').textContent = state.ucl.semiHome;
+      document.getElementById('semiHomeScore').textContent = state.ucl.semiHScore;
+      document.getElementById('semiAwayName').textContent = state.ucl.semiAway;
+      document.getElementById('semiAwayScore').textContent = state.ucl.semiAScore;
+      document.getElementById('finalHomeName').textContent = state.ucl.finalHome;
+      document.getElementById('finalHomeScore').textContent = state.ucl.finalHScore;
+      document.getElementById('finalAwayName').textContent = state.ucl.finalAway;
+      document.getElementById('finalAwayScore').textContent = state.ucl.finalAScore;
+      document.getElementById('uclWinnerName').textContent = state.ucl.champion;
+
+      // 4. TROPHIES TAB - 3 Columns (Total, League, UCL)
+      const teamsCopy = state.teams.map(t => ({
+        ...t,
+        totalTrophies: (t.leagueTitles || 0) + (t.uclTitles || 0)
+      }));
+
+      // Column 1: Total Trophies
+      const totalSorted = [...teamsCopy].sort((a,b) => b.totalTrophies - a.totalTrophies);
+      document.getElementById('trophiesTotalBody').innerHTML = totalSorted.map((t, idx) => `
+        <tr>
+          <td>${idx + 1}</td>
+          <td class="team-col">
+            <span class="team-badge" style="border-color:var(--gold);">${t.name.charAt(0)}</span>
+            <span>${t.name}</span>
+          </td>
+          <td style="text-align: right;" class="count-badge-total">${t.totalTrophies}</td>
+        </tr>
+      `).join('');
+
+      // Column 2: League Titles
+      const leagueSorted = [...teamsCopy].sort((a,b) => b.leagueTitles - a.leagueTitles);
+      document.getElementById('trophiesLeagueBody').innerHTML = leagueSorted.map((t, idx) => `
+        <tr>
+          <td>${idx + 1}</td>
+          <td class="team-col">
+            <span class="team-badge" style="border-color:var(--accent);">${t.name.charAt(0)}</span>
+            <span>${t.name}</span>
+          </td>
+          <td style="text-align: right;" class="count-badge-league">${t.leagueTitles}</td>
+        </tr>
+      `).join('');
+
+      // Column 3: UCL Titles
+      const uclSorted = [...teamsCopy].sort((a,b) => b.uclTitles - a.uclTitles);
+      document.getElementById('trophiesUclBody').innerHTML = uclSorted.map((t, idx) => `
+        <tr>
+          <td>${idx + 1}</td>
+          <td class="team-col">
+            <span class="team-badge" style="border-color:var(--ucl-blue);">${t.name.charAt(0)}</span>
+            <span>${t.name}</span>
+          </td>
+          <td style="text-align: right;" class="count-badge-ucl">${t.uclTitles}</td>
+        </tr>
+      `).join('');
+
+      // 5. Fixtures with League vs UCL Tag
+      const fixContainer = document.getElementById('sub-fixtures');
+      fixContainer.innerHTML = state.fixtures.map(f => {
+        const isUcl = f.comp === 'UCL';
+        return `
+          <div class="match-date-header">
+            <span>${f.time}</span>
+            <span class="match-type-tag ${isUcl ? 'tag-ucl' : 'tag-league'}">${f.comp || 'League'}</span>
+          </div>
+          <div class="match-glass-card">
+            <div class="team-row"><div class="team-info"><span class="team-badge">${getTeam(f.homeId).name.charAt(0)}</span><span>${getTeam(f.homeId).name}</span></div><span class="score-box">-</span></div>
+            <span class="vs-pill">VS</span>
+            <div class="team-row"><div class="team-info"><span class="team-badge">${getTeam(f.awayId).name.charAt(0)}</span><span>${getTeam(f.awayId).name}</span></div><span class="score-box">-</span></div>
+          </div>
+        `;
+      }).join('') || '<p style="text-align:center; color:var(--muted); padding:20px;">No upcoming fixtures.</p>';
+
+      const resContainer = document.getElementById('sub-results');
+      resContainer.innerHTML = state.results.map(r => {
+        const isUcl = r.comp === 'UCL';
+        return `
+          <div class="match-date-header">
+            <span>${r.time}</span>
+            <span class="match-type-tag ${isUcl ? 'tag-ucl' : 'tag-league'}">${r.comp || 'League'}</span>
+          </div>
+          <div class="match-glass-card">
+            <div class="team-row"><div class="team-info"><span class="team-badge">${getTeam(r.homeId).name.charAt(0)}</span><span>${getTeam(r.homeId).name}</span></div><span class="score-box ${r.hScore > r.aScore ? 'winner' : ''}">${r.hScore}</span></div>
+            <div class="team-row"><div class="team-info"><span class="team-badge">${getTeam(r.awayId).name.charAt(0)}</span><span>${getTeam(r.awayId).name}</span></div><span class="score-box ${r.aScore > r.hScore ? 'winner' : ''}">${r.aScore}</span></div>
+          </div>
+        `;
+      }).join('') || '<p style="text-align:center; color:var(--muted); padding:20px;">No results recorded.</p>';
+
+      // 6. Admin Dropdowns & Dynamic Selectors
+      const teamOptions = state.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+      document.getElementById('fixtureHomeTeam').innerHTML = teamOptions;
+      document.getElementById('fixtureAwayTeam').innerHTML = teamOptions;
+      document.getElementById('adminDeleteTeamSelect').innerHTML = teamOptions;
+      document.getElementById('adminAwardUclSelect').innerHTML = teamOptions;
+
+      document.getElementById('adminUclSpotsSelect').value = state.uclSpots;
+      document.getElementById('adminLeagueNameInput').value = state.leagueName;
+
+      document.getElementById('setSemiHome').value = state.ucl.semiHome;
+      document.getElementById('setSemiHScore').value = state.ucl.semiHScore;
+      document.getElementById('setSemiAway').value = state.ucl.semiAway;
+      document.getElementById('setSemiAScore').value = state.ucl.semiAScore;
+      document.getElementById('setFinalHome').value = state.ucl.finalHome;
+      document.getElementById('setFinalHScore').value = state.ucl.finalHScore;
+      document.getElementById('setFinalAway').value = state.ucl.finalAway;
+      document.getElementById('setFinalAScore').value = state.ucl.finalAScore;
+
+      const adminFixList = document.getElementById('adminFixtureUpdateList');
+      adminFixList.innerHTML = state.fixtures.map((f, i) => `
+        <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; margin-bottom:8px;">
+          <div style="font-size:12px; font-weight:700; margin-bottom:6px;">[${f.comp || 'League'}] ${getTeam(f.homeId).name} vs ${getTeam(f.awayId).name}</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="number" id="hScore_${i}" placeholder="Home" style="width:65px;">
+            <span>-</span>
+            <input type="number" id="aScore_${i}" placeholder="Away" style="width:65px;">
+            <button class="btn" style="margin:0; flex:1;" onclick="submitMatchScore(${i})">Save Score</button>
+          </div>
+        </div>
+      `).join('') || '<div style="color:var(--muted); font-size:12px;">No matches awaiting score entry.</div>';
+    }
+
+    /* Admin Handlers */
+    function updateLeagueName() {
+      const val = document.getElementById('adminLeagueNameInput').value.trim();
+      if (!val) return alert('Enter a valid league name');
+      state.leagueName = val;
+      saveState();
+      alert('League name updated successfully!');
+    }
+
+    function updateUclSpots() {
+      state.uclSpots = parseInt(document.getElementById('adminUclSpotsSelect').value);
+      saveState();
+    }
+
+    function addNewTeam() {
+      const name = document.getElementById('adminNewTeamName').value.trim();
+      if (!name) return alert('Enter team name');
+      state.teams.push({ id: Date.now().toString(), name: name, leagueTitles: 0, uclTitles: 0 });
+      document.getElementById('adminNewTeamName').value = '';
+      saveState();
+      alert('New club added to the database!');
+    }
+
+    function deleteSelectedTeam() {
+      const teamId = document.getElementById('adminDeleteTeamSelect').value;
+      if (!teamId) return alert('No team selected to delete.');
+
+      const teamObj = state.teams.find(t => t.id === teamId);
+      if (!confirm(`Are you sure you want to delete ${teamObj.name}?`)) return;
+
+      state.teams = state.teams.filter(t => t.id !== teamId);
+      state.fixtures = state.fixtures.filter(f => f.homeId !== teamId && f.awayId !== teamId);
+      state.results = state.results.filter(r => r.homeId !== teamId && r.awayId !== teamId);
+
+      saveState();
+      alert('Team removed successfully!');
+    }
+
+    function scheduleFixture() {
+      const comp = document.getElementById('fixtureCompType').value;
+      const h = document.getElementById('fixtureHomeTeam').value;
+      const a = document.getElementById('fixtureAwayTeam').value;
+      const t = document.getElementById('fixtureDateInput').value.trim();
+      if (h === a) return alert('Cannot match a team against itself!');
+      state.fixtures.push({ id: Date.now().toString(), comp: comp, homeId: h, awayId: a, time: t || 'Upcoming' });
+      document.getElementById('fixtureDateInput').value = '';
+      saveState();
+      alert(`Fixture saved as ${comp} match!`);
+    }
+
+    function submitMatchScore(index) {
+      const hs = document.getElementById('hScore_' + index).value;
+      const as = document.getElementById('aScore_' + index).value;
+      if (hs === '' || as === '') return alert('Enter valid scores.');
+
+      const f = state.fixtures[index];
+      state.results.unshift({
+        id: Date.now().toString(),
+        comp: f.comp || 'League',
+        homeId: f.homeId,
+        awayId: f.awayId,
+        hScore: parseInt(hs),
+        aScore: parseInt(as),
+        time: f.time
+      });
+
+      state.fixtures.splice(index, 1);
+      saveState();
+      alert('Match result updated!');
+    }
+
+    function updateUclKnockoutsAndCrown() {
+      state.ucl.semiHome = document.getElementById('setSemiHome').value || 'Real';
+      state.ucl.semiHScore = parseInt(document.getElementById('setSemiHScore').value) || 0;
+      state.ucl.semiAway = document.getElementById('setSemiAway').value || 'Monaco';
+      state.ucl.semiAScore = parseInt(document.getElementById('setSemiAScore').value) || 0;
+
+      state.ucl.finalHome = document.getElementById('setFinalHome').value || 'Real Madrid';
+      state.ucl.finalHScore = parseInt(document.getElementById('setFinalHScore').value) || 0;
+      state.ucl.finalAway = document.getElementById('setFinalAway').value || 'Sparta FC';
+      state.ucl.finalAScore = parseInt(document.getElementById('setFinalAScore').value) || 0;
+
+      const champId = document.getElementById('adminAwardUclSelect').value;
+      const champClub = state.teams.find(t => t.id === champId);
+
+      if (champClub) {
+        champClub.uclTitles = (champClub.uclTitles || 0) + 1;
+        state.ucl.champion = champClub.name;
+        alert(`UCL tournament saved! 🏆 ${champClub.name} awarded +1 UCL Title!`);
+      }
+
+      saveState();
+    }
+
+    function finishCurrentSeason() {
+      const table = calculateStandings();
+      if (table.length === 0) return;
+      const winner = table[0];
+
+      if (!confirm(`Crown ${winner.name} as League Champion and end Season ${state.season}?`)) return;
+
+      const teamObj = state.teams.find(t => t.id === winner.id);
+      if (teamObj) teamObj.leagueTitles = (teamObj.leagueTitles || 0) + 1;
+
+      state.season++;
+      state.results = [];
+      state.fixtures = [];
+      saveState();
+      alert(`Season finalized! 🏆 ${winner.name} was crowned League Champion!`);
+    }
+
+    function restartLeagueData() {
+      if (!confirm('Are you sure you want to reset all league results and scores to 0?')) return;
+      state.results = state.results.filter(r => r.comp === 'UCL');
+      state.fixtures = state.fixtures.filter(f => f.comp === 'UCL');
+      saveState();
+      alert('League reset successfully!');
+    }
+
+    window.onload = loadState;
+  </script>
+</body>
+</html>
