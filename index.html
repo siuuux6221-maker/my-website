@@ -2,376 +2,287 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CCNN Esport</title>
   <style>
     :root {
-      --bg: #0b0f19;
-      --card: #151d30;
-      --border: #222f4c;
+      --glass-bg: rgba(16, 24, 48, 0.55);
+      --glass-border: rgba(0, 229, 255, 0.22);
+      --glass-shine: rgba(255, 255, 255, 0.08);
       --accent: #00e5ff;
-      --gold: #ffd700;
-      --ucl: #3b82f6;
-      --danger: #ef4444;
+      --accent-glow: rgba(0, 229, 255, 0.35);
       --text: #f8fafc;
-      --muted: #94a3b8;
+      --muted: #8fa0be;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 70px; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 10%, #152243 0%, #080d1a 60%, #03060d 100%);
+      min-height: 100vh;
+      color: var(--text);
+      padding-bottom: 90px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Liquid Lights */
+    body::before {
+      content: "";
+      position: fixed;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.25) 0%, transparent 70%);
+      filter: blur(50px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Liquid Glass Top Header */
     header {
-      background: #101726; padding: 14px 16px; display: flex;
-      justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 var(--glass-shine);
+      padding: 16px 20px;
+      text-align: center;
     }
-    .brand { display: flex; align-items: center; gap: 8px; }
-    .logo-badge {
-      background: var(--accent); color: #000; font-weight: 900;
-      width: 34px; height: 34px; border-radius: 6px; display: flex;
-      align-items: center; justify-content: center; font-size: 14px;
+
+    .website-name {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px var(--accent-glow);
     }
-    .nav-tabs {
-      display: flex; overflow-x: auto; white-space: nowrap;
-      background: #0d1424; padding: 8px 12px; gap: 8px; border-bottom: 1px solid var(--border);
+
+    /* Page Area */
+    .content-area {
+      position: relative;
+      z-index: 1;
+      padding: 24px 16px;
+      max-width: 650px;
+      margin: auto;
     }
-    .nav-tabs::-webkit-scrollbar { display: none; }
-    .nav-btn {
-      background: transparent; border: 1px solid transparent; color: var(--muted);
-      padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 13px; cursor: pointer;
+
+    .view-card {
+      display: none;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 1px var(--glass-shine);
+      text-align: center;
     }
-    .nav-btn.active {
-      background: var(--card); color: var(--accent); border-color: var(--accent);
+
+    .view-card.active {
+      display: block;
     }
-    .container { padding: 14px; max-width: 650px; margin: auto; }
-    .page-view { display: none; }
-    .page-view.active { display: block; }
-    .card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 14px; margin-bottom: 14px;
+
+    .view-card h2 {
+      font-size: 18px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-weight: 800;
     }
-    .card-title {
-      color: var(--accent); font-size: 13px; font-weight: bold;
-      text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between;
+
+    .view-card p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
     }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; }
-    th { color: var(--muted); padding: 8px 4px; font-size: 11px; background: #0f172a; }
-    td { padding: 8px 4px; border-bottom: 1px solid #1c2744; }
-    .team-col { text-align: left; font-weight: bold; }
-    .btn {
-      width: 100%; padding: 10px; background: var(--accent);
-      color: #000; border: none; border-radius: 6px; font-weight: bold;
-      cursor: pointer; margin-top: 8px; font-size: 13px;
+
+    /* Bottom Liquid Glass Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      max-width: 500px;
+      margin: auto;
+      background: rgba(14, 20, 38, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 8px 10px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 1px 1px var(--glass-shine);
+      z-index: 100;
     }
-    .btn-danger { background: var(--danger); color: #fff; }
-    input, select {
-      width: 100%; padding: 10px; background: #0b1120;
-      border: 1px solid var(--border); color: #fff; border-radius: 6px; margin-bottom: 8px;
+
+    .nav-item {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 6px 10px;
+      border-radius: 14px;
+      transition: all 0.25s ease;
+    }
+
+    .nav-item svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--muted);
+      transition: all 0.25s ease;
+    }
+
+    /* Active State Glow */
+    .nav-item.active {
+      color: var(--accent);
+      background: rgba(0, 229, 255, 0.12);
+      box-shadow: inset 0 0 12px rgba(0, 229, 255, 0.2);
+    }
+
+    .nav-item.active svg {
+      stroke: var(--accent);
+      filter: drop-shadow(0 0 8px var(--accent));
     }
   </style>
 </head>
 <body>
 
+  <!-- Top Website Title -->
   <header>
-    <div class="brand">
-      <div class="logo-badge">CC</div>
-      <div>
-        <strong style="display:block; font-size:14px;">CCNN ESPORT</strong>
-        <span id="seasonHeader" style="font-size:11px; color:var(--accent);">Season 1</span>
-      </div>
-    </div>
-    <button class="nav-btn" style="border: 1px solid var(--border);" onclick="promptAdmin()">Admin 🔒</button>
+    <div class="website-name">CCNN Esport</div>
   </header>
 
-  <nav class="nav-tabs">
-    <button class="nav-btn active" onclick="navigate('home')">HOME</button>
-    <button class="nav-btn" onclick="navigate('league')">LEAGUE</button>
-    <button class="nav-btn" onclick="navigate('fixtures')">FIXTURES</button>
-    <button class="nav-btn" onclick="navigate('results')">RESULTS</button>
-    <button class="nav-btn" onclick="navigate('ucl')">UCL</button>
-    <button class="nav-btn" onclick="navigate('teams')">TEAMS</button>
-    <button class="nav-btn" onclick="navigate('legacy')">LEGACY</button>
-    <button class="nav-btn" onclick="navigate('history')">HISTORY</button>
-    <button class="nav-btn" id="adminTab" style="display:none; color:var(--accent);" onclick="navigate('admin')">ADMIN</button>
+  <!-- Page Displays -->
+  <main class="content-area">
+    <div id="page-home" class="view-card active">
+      <h2>Home Screen</h2>
+      <p>Liquid glass layout initialized. Ready for the home dashboard content.</p>
+    </div>
+
+    <div id="page-league" class="view-card">
+      <h2>League Table</h2>
+      <p>Standings and team positions will appear here.</p>
+    </div>
+
+    <div id="page-fixtures" class="view-card">
+      <h2>Fixtures</h2>
+      <p>Upcoming match schedule will appear here.</p>
+    </div>
+
+    <div id="page-trophies" class="view-card">
+      <h2>Trophies</h2>
+      <p>Championships, achievements, and legacy cabinet will appear here.</p>
+    </div>
+
+    <div id="page-admin" class="view-card">
+      <h2>Admin Controls</h2>
+      <p>Score entries and league settings will appear here.</p>
+    </div>
+  </main>
+
+  <!-- Bottom Floating Glass Tab Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('home')">
+      <!-- Home Icon -->
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>Home</span>
+    </button>
+
+    <button class="nav-item" onclick="switchTab('league')">
+      <!-- League / Table Icon -->
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="3" y1="9" x2="21" y2="9"></line>
+        <line x1="9" y1="21" x2="9" y2="9"></line>
+      </svg>
+      <span>League</span>
+    </button>
+
+    <button class="nav-item" onclick="switchTab('fixtures')">
+      <!-- Fixtures / Calendar Icon -->
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <span>Fixtures</span>
+    </button>
+
+    <button class="nav-item" onclick="switchTab('trophies')">
+      <!-- Trophies Icon -->
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"></path>
+        <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"></path>
+        <path d="M4 22h16"></path>
+        <path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"></path>
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
+      </svg>
+      <span>Trophies</span>
+    </button>
+
+    <button class="nav-item" onclick="switchTab('admin')">
+      <!-- Admin / Shield Lock Icon -->
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+      <span>Admin</span>
+    </button>
   </nav>
 
-  <div class="container">
-    <!-- HOME -->
-    <div id="view-home" class="page-view active">
-      <div class="card">
-        <div class="card-title"><span>League Leader</span><span id="homeLeader">--</span></div>
-      </div>
-      <div class="card">
-        <div class="card-title">League Table Summary</div>
-        <table>
-          <thead>
-            <tr><th>#</th><th style="text-align:left;">Team</th><th>P</th><th>GD</th><th>PTS</th></tr>
-          </thead>
-          <tbody id="homeSummaryBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- LEAGUE -->
-    <div id="view-league" class="page-view">
-      <div class="card">
-        <div class="card-title">Official Standings</div>
-        <table>
-          <thead>
-            <tr><th>#</th><th style="text-align:left;">Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>PTS</th></tr>
-          </thead>
-          <tbody id="leagueFullBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- FIXTURES -->
-    <div id="view-fixtures" class="page-view">
-      <div class="card">
-        <div class="card-title">Upcoming Matches</div>
-        <div id="fixturesListContainer">No fixtures scheduled.</div>
-      </div>
-    </div>
-
-    <!-- RESULTS -->
-    <div id="view-results" class="page-view">
-      <div class="card">
-        <div class="card-title">Match Results</div>
-        <div id="resultsListContainer">No matches played yet.</div>
-      </div>
-    </div>
-
-    <!-- UCL -->
-    <div id="view-ucl" class="page-view">
-      <div class="card">
-        <div class="card-title">UCL Champion</div>
-        <h3 id="uclChampHeading" style="color:var(--gold);">Not Decided</h3>
-      </div>
-      <div class="card">
-        <div class="card-title">UCL Knockout / Finals</div>
-        <div id="uclKnockoutsContainer">No matches scheduled yet.</div>
-      </div>
-    </div>
-
-    <!-- TEAMS -->
-    <div id="view-teams" class="page-view">
-      <div class="card">
-        <div class="card-title">Active Clubs</div>
-        <div id="teamsListContainer"></div>
-      </div>
-    </div>
-
-    <!-- LEGACY -->
-    <div id="view-legacy" class="page-view">
-      <div class="card">
-        <div class="card-title">All-Time Legacy Table</div>
-        <table>
-          <thead>
-            <tr><th>#</th><th style="text-align:left;">Team</th><th>Total Trophies</th></tr>
-          </thead>
-          <tbody id="legacyTableContainer"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- HISTORY -->
-    <div id="view-history" class="page-view">
-      <div class="card">
-        <div class="card-title">Previous Seasons</div>
-        <div id="historyListContainer">No past seasons stored.</div>
-      </div>
-    </div>
-
-    <!-- ADMIN -->
-    <div id="view-admin" class="page-view">
-      <div class="card">
-        <div class="card-title">Team Control</div>
-        <input type="text" id="adminNewTeam" placeholder="New Team Name">
-        <button class="btn" onclick="addTeam()">Add Team</button>
-      </div>
-      <div class="card">
-        <div class="card-title">Schedule Fixture</div>
-        <select id="fixHome"></select>
-        <select id="fixAway"></select>
-        <input type="text" id="fixTime" placeholder="Date & Time (e.g. Sat 7 PM)">
-        <button class="btn" onclick="addFixture()">Save Fixture</button>
-      </div>
-      <div class="card">
-        <div class="card-title">Record Result</div>
-        <div id="adminFixtureEntries"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Season Management</div>
-        <button class="btn btn-danger" onclick="finishSeason()">Finish Season & Archive</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    const KEY = 'CCNN_DATA_STORE';
-    let data = {
-      season: 'CCNN Esport Season 1',
-      teams: [
-        { id: '1', name: 'Sparta FC', trophies: 0 },
-        { id: '2', name: 'Viper Gaming', trophies: 0 },
-        { id: '3', name: 'Titan SC', trophies: 0 },
-        { id: '4', name: 'Apex United', trophies: 0 }
-      ],
-      fixtures: [],
-      results: [],
-      history: []
-    };
+    function switchTab(tabKey) {
+      document.querySelectorAll('.view-card').forEach(function(card) {
+        card.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-item').forEach(function(btn) {
+        btn.classList.remove('active');
+      });
 
-    function init() {
-      const saved = localStorage.getItem(KEY);
-      if (saved) {
-        try { data = JSON.parse(saved); } catch (e) {}
+      const target = document.getElementById('page-' + tabKey);
+      if (target) {
+        target.classList.add('active');
       }
-      render();
-    }
 
-    function persist() {
-      localStorage.setItem(KEY, JSON.stringify(data));
-      render();
-    }
-
-    function navigate(tabId) {
-      document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-
-      const targetPage = document.getElementById('view-' + tabId);
-      if (targetPage) targetPage.classList.add('active');
-
-      const buttons = document.querySelectorAll('.nav-btn');
-      buttons.forEach(btn => {
-        if (btn.textContent.trim().toLowerCase() === tabId) {
+      const buttons = document.querySelectorAll('.nav-item');
+      buttons.forEach(function(btn) {
+        if (btn.querySelector('span').textContent.toLowerCase() === tabKey.toLowerCase()) {
           btn.classList.add('active');
         }
       });
-      window.scrollTo(0, 0);
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
-    function promptAdmin() {
-      const pin = prompt('Enter Admin PIN (Default: 1234)');
-      if (pin === '1234') {
-        document.getElementById('adminTab').style.display = 'inline-block';
-        navigate('admin');
-      } else if (pin !== null) {
-        alert('Invalid PIN!');
-      }
-    }
-
-    function getStandings() {
-      const table = data.teams.map(t => ({
-        id: t.id, name: t.name, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0
-      }));
-      data.results.forEach(r => {
-        const home = table.find(t => t.id === r.homeId);
-        const away = table.find(t => t.id === r.awayId);
-        if (!home || !away) return;
-        home.p++; away.p++;
-        home.gf += r.hScore; home.ga += r.aScore;
-        away.gf += r.aScore; away.ga += r.hScore;
-        home.gd = home.gf - home.ga;
-        away.gd = away.gf - away.ga;
-        if (r.hScore > r.aScore) { home.w++; home.pts += 3; away.l++; }
-        else if (r.hScore < r.aScore) { away.w++; away.pts += 3; home.l++; }
-        else { home.d++; away.d++; home.pts++; away.pts++; }
-      });
-      return table.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
-    }
-
-    function render() {
-      document.getElementById('seasonHeader').textContent = data.season;
-      const standings = getStandings();
-
-      document.getElementById('homeLeader').textContent = standings[0] ? standings[0].name : '--';
-      document.getElementById('homeSummaryBody').innerHTML = standings.slice(0, 4).map((t, i) => `
-        <tr><td>${i+1}</td><td class="team-col">${t.name}</td><td>${t.p}</td><td>${t.gd}</td><td style="color:var(--accent); font-weight:bold;">${t.pts}</td></tr>
-      `).join('');
-
-      document.getElementById('leagueFullBody').innerHTML = standings.map((t, i) => `
-        <tr><td>${i+1}</td><td class="team-col">${t.name}</td><td>${t.p}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gd}</td><td style="color:var(--accent); font-weight:bold;">${t.pts}</td></tr>
-      `).join('');
-
-      document.getElementById('fixturesListContainer').innerHTML = data.fixtures.map((f, i) => `
-        <div style="padding:8px 0; border-bottom:1px solid var(--border);">${getTeamName(f.homeId)} VS ${getTeamName(f.awayId)} <span style="font-size:11px; color:var(--muted);">(${f.time})</span></div>
-      `).join('') || 'No fixtures scheduled.';
-
-      document.getElementById('resultsListContainer').innerHTML = data.results.map((r, i) => `
-        <div style="padding:8px 0; border-bottom:1px solid var(--border); font-weight:bold;">
-          ${getTeamName(r.homeId)} ${r.hScore} - ${r.aScore} ${getTeamName(r.awayId)}
-        </div>
-      `).join('') || 'No results yet.';
-
-      document.getElementById('teamsListContainer').innerHTML = data.teams.map(t => `
-        <div style="padding:8px 0; border-bottom:1px solid var(--border);">${t.name} (Trophies: ${t.trophies})</div>
-      `).join('');
-
-      const legacy = [...data.teams].sort((a,b) => b.trophies - a.trophies);
-      document.getElementById('legacyTableContainer').innerHTML = legacy.map((t, i) => `
-        <tr><td>${i+1}</td><td class="team-col">${t.name}</td><td style="color:var(--gold); font-weight:bold;">🏆 ${t.trophies}</td></tr>
-      `).join('');
-
-      const teamOptions = data.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
-      document.getElementById('fixHome').innerHTML = teamOptions;
-      document.getElementById('fixAway').innerHTML = teamOptions;
-
-      document.getElementById('adminFixtureEntries').innerHTML = data.fixtures.map((f, i) => `
-        <div style="margin-bottom:8px;">
-          <span>${getTeamName(f.homeId)} vs ${getTeamName(f.awayId)}</span>
-          <div style="display:flex; gap:6px; margin-top:4px;">
-            <input type="number" id="hs_${i}" placeholder="Home" style="width:60px;">
-            <input type="number" id="as_${i}" placeholder="Away" style="width:60px;">
-            <button class="btn" style="margin:0;" onclick="submitScore(${i})">Save</button>
-          </div>
-        </div>
-      `).join('') || 'No fixtures awaiting score.';
-    }
-
-    function getTeamName(id) {
-      const t = data.teams.find(x => x.id === id);
-      return t ? t.name : 'Unknown';
-    }
-
-    function addTeam() {
-      const name = document.getElementById('adminNewTeam').value.trim();
-      if (!name) return;
-      data.teams.push({ id: Date.now().toString(), name: name, trophies: 0 });
-      document.getElementById('adminNewTeam').value = '';
-      persist();
-    }
-
-    function addFixture() {
-      const h = document.getElementById('fixHome').value;
-      const a = document.getElementById('fixAway').value;
-      const time = document.getElementById('fixTime').value.trim();
-      if (h === a) return alert('Same team selected twice!');
-      data.fixtures.push({ homeId: h, awayId: a, time: time || 'TBD' });
-      persist();
-    }
-
-    function submitScore(index) {
-      const hs = document.getElementById('hs_' + index).value;
-      const as = document.getElementById('as_' + index).value;
-      if (hs === '' || as === '') return alert('Enter score values.');
-      const f = data.fixtures[index];
-      data.results.push({ homeId: f.homeId, awayId: f.awayId, hScore: parseInt(hs), aScore: parseInt(as) });
-      data.fixtures.splice(index, 1);
-      persist();
-    }
-
-    function finishSeason() {
-      if (!confirm('End current season and grant champion trophy?')) return;
-      const standings = getStandings();
-      if (standings.length > 0) {
-        const champ = data.teams.find(t => t.id === standings[0].id);
-        if (champ) champ.trophies++;
-      }
-      data.fixtures = [];
-      data.results = [];
-      persist();
-      alert('Season archived!');
-    }
-
-    window.onload = init;
   </script>
 </body>
 </html>
