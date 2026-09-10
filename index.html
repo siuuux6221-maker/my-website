@@ -285,7 +285,6 @@
       flex-shrink: 0;
     }
 
-    /* MATCHES & CARDS */
     .match-toggle-bar {
       display: flex;
       background: rgba(10, 16, 32, 0.7);
@@ -375,7 +374,104 @@
       align-self: center;
     }
 
-    /* ADMIN FORM CONTROLS */
+    /* UCL KNOCKOUT BRACKET & TROPHY PODIUM */
+    .bracket-container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 14px;
+    }
+
+    .bracket-stage-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--ucl-blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .bracket-match {
+      background: rgba(14, 22, 42, 0.85);
+      border: 1px solid var(--ucl-blue);
+      box-shadow: 0 4px 20px var(--ucl-glow);
+      border-radius: 12px;
+      padding: 10px 14px;
+      position: relative;
+    }
+
+    .bracket-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .bracket-row:first-child {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .bracket-score {
+      font-size: 15px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .bracket-connector {
+      width: 2px;
+      height: 18px;
+      background: var(--ucl-blue);
+      margin-left: 24px;
+      box-shadow: 0 0 8px var(--ucl-blue);
+    }
+
+    .ucl-trophy-podium {
+      text-align: center;
+      padding: 24px 16px;
+      background: radial-gradient(circle at center, rgba(59, 130, 246, 0.25) 0%, rgba(14, 22, 42, 0.8) 70%);
+      border: 1px solid var(--ucl-blue);
+      border-radius: 20px;
+      margin-top: 20px;
+      box-shadow: 0 0 35px var(--ucl-glow);
+    }
+
+    .ucl-trophy-svg {
+      width: 90px;
+      height: 90px;
+      filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+      animation: floatTrophy 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatTrophy {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-8px); }
+    }
+
+    .podium-winner-name {
+      font-size: 22px;
+      font-weight: 900;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 8px;
+    }
+
+    .podium-champion-badge {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--gold), #f59e0b);
+      color: #040812;
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* ADMIN CONTROLS */
     .admin-accordion {
       background: var(--glass-card);
       border: 1px solid var(--glass-border);
@@ -452,7 +548,6 @@
       color: #03060d;
     }
 
-    /* BOTTOM NAV */
     .bottom-nav {
       position: fixed;
       bottom: 12px;
@@ -512,7 +607,6 @@
 </head>
 <body>
 
-  <!-- Sticky Top Header -->
   <header>
     <div class="website-name">CCNN Esport</div>
   </header>
@@ -599,20 +693,110 @@
       <div id="sub-results" style="display:none;"></div>
     </div>
 
-    <!-- UCL TAB -->
-    <div id="page-ucl" class="view-card">
+    <!-- UCL TAB (Active by default for review) -->
+    <div id="page-ucl" class="view-card active">
+      
+      <!-- 1. Top UCL Banner -->
       <div class="league-banner">
         <div>
           <div class="league-title-label" style="color:var(--ucl-blue);">⭐ UEFA CHAMPIONS LEAGUE</div>
-          <div class="league-title-name">Tournament Hub</div>
+          <div class="league-title-name">UCL Group Stage</div>
         </div>
+        <div class="season-tag" style="border-color:var(--ucl-blue); color:var(--ucl-blue);">Group A</div>
       </div>
+
+      <!-- 2. UCL Group Stage Regular Point Table -->
       <div class="table-card">
-        <div style="padding:10px 14px; font-size:12px; font-weight:800; color:var(--ucl-blue); text-transform:uppercase;">
-          Qualified Teams (Group Stage)
-        </div>
-        <div id="uclQualifiedList" style="padding: 10px 14px; font-size:13px;"></div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 30px;">Pos</th>
+              <th style="text-align: left;">Club</th>
+              <th>P</th>
+              <th>W</th>
+              <th>D</th>
+              <th>L</th>
+              <th>GF</th>
+              <th>GA</th>
+              <th>GD</th>
+              <th class="pts-col" style="color:var(--ucl-blue);">PTS</th>
+            </tr>
+          </thead>
+          <tbody id="uclGroupTableBody"></tbody>
+        </table>
       </div>
+
+      <!-- 3. Group champion direct final Qualification box -->
+      <div class="legend-card" style="border-color: rgba(59, 130, 246, 0.4);">
+        <div class="legend-heading" style="color:var(--ucl-blue);">Qualification</div>
+        <div class="legend-row">
+          <div class="ucl-square"></div>
+          <span>Group champion direct final</span>
+        </div>
+      </div>
+
+      <!-- 4. UCL Knockout Stage (Semi-final & Final) -->
+      <div class="legend-card" style="margin-top: 20px;">
+        <div class="league-title-label" style="color:var(--ucl-blue); margin-bottom:12px;">🏆 UCL KNOCKOUT STAGE</div>
+        
+        <div class="bracket-container">
+          <!-- Semi Final -->
+          <div>
+            <div class="bracket-stage-title">Semi Final</div>
+            <div class="bracket-match">
+              <div class="bracket-row">
+                <span id="semiHomeName">Real</span>
+                <span class="bracket-score" id="semiHomeScore">3</span>
+              </div>
+              <div class="bracket-row">
+                <span id="semiAwayName">Monaco</span>
+                <span class="bracket-score" id="semiAwayScore">2</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bracket-connector"></div>
+
+          <!-- Final -->
+          <div>
+            <div class="bracket-stage-title">Final</div>
+            <div class="bracket-match">
+              <div class="bracket-row">
+                <span id="finalHomeName">Real Madrid</span>
+                <span class="bracket-score" id="finalHomeScore">2</span>
+              </div>
+              <div class="bracket-row">
+                <span id="finalAwayName">Sparta FC (Group Champ)</span>
+                <span class="bracket-score" id="finalAwayScore">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. UCL Trophy Logo & Winner Champion Podium -->
+        <div class="ucl-trophy-podium">
+          <!-- Realistic UCL Big Ears Trophy Vector -->
+          <svg class="ucl-trophy-svg" viewBox="0 0 100 100" fill="none">
+            <path d="M30 20 H70 V42 C70 58 58 70 50 70 C42 70 30 58 30 42 Z" fill="url(#trophyGrad)" stroke="#ffd700" stroke-width="2"/>
+            <path d="M30 24 C20 24 16 35 16 46 C16 58 26 62 34 60 L32 55 C26 56 22 52 22 46 C22 38 25 30 30 29 Z" fill="#ffd700"/>
+            <path d="M70 24 C80 24 84 35 84 46 C84 58 74 62 66 60 L68 55 C74 56 78 52 78 46 C78 38 75 30 70 29 Z" fill="#ffd700"/>
+            <rect x="44" y="70" width="12" height="15" fill="#ffd700"/>
+            <path d="M34 85 H66 V92 H34 Z" fill="#e2e8f0" stroke="#ffd700" stroke-width="1.5"/>
+            <defs>
+              <linearGradient id="trophyGrad" x1="30" y1="20" x2="70" y2="70" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ffffff"/>
+                <stop offset="0.5" stop-color="#cbd5e1"/>
+                <stop offset="1" stop-color="#94a3b8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <div class="podium-winner-name" id="uclWinnerName">Real Madrid</div>
+          <span class="podium-champion-badge">Champions</span>
+        </div>
+
+      </div>
+
     </div>
 
     <!-- TROPHIES TAB -->
@@ -628,8 +812,8 @@
       </div>
     </div>
 
-    <!-- ADMIN TAB (Active by default for review) -->
-    <div id="page-admin" class="view-card active">
+    <!-- ADMIN TAB -->
+    <div id="page-admin" class="view-card">
       <div class="league-banner">
         <div>
           <div class="league-title-label">⚙️ CONTROL CENTER</div>
@@ -666,6 +850,13 @@
             <button class="btn" onclick="addNewTeam()">Add Club</button>
           </div>
 
+          <!-- Feature Added: Delete / Remove Team Option -->
+          <div class="form-group">
+            <label>Delete Team from League</label>
+            <select id="adminDeleteTeamSelect" style="margin-bottom: 6px;"></select>
+            <button class="btn btn-danger" onclick="deleteSelectedTeam()">Remove Team</button>
+          </div>
+
           <div class="form-group">
             <label>Finish Season & Award Trophy</label>
             <button class="btn btn-gold" onclick="finishCurrentSeason()">🏆 Finish League & Crown #1</button>
@@ -700,11 +891,40 @@
         </div>
       </div>
 
+      <!-- Accordion 3: UCL Knockout Customizer -->
+      <div class="admin-accordion">
+        <div class="admin-accordion-header" onclick="toggleAccordion(this)">
+          <span>3. UCL Knockout & Champion Settings</span>
+          <span>▾</span>
+        </div>
+        <div class="admin-accordion-body">
+          <div class="form-group">
+            <label>Semi Final Scores</label>
+            <input type="text" id="setSemiHome" placeholder="Home Team (e.g. Real)" style="margin-bottom:4px;">
+            <input type="number" id="setSemiHScore" placeholder="Score" style="margin-bottom:4px;">
+            <input type="text" id="setSemiAway" placeholder="Away Team (e.g. Monaco)" style="margin-bottom:4px;">
+            <input type="number" id="setSemiAScore" placeholder="Score">
+          </div>
+          <div class="form-group">
+            <label>Final Scores</label>
+            <input type="text" id="setFinalHome" placeholder="Home Team (e.g. Real Madrid)" style="margin-bottom:4px;">
+            <input type="number" id="setFinalHScore" placeholder="Score" style="margin-bottom:4px;">
+            <input type="text" id="setFinalAway" placeholder="Away Team" style="margin-bottom:4px;">
+            <input type="number" id="setFinalAScore" placeholder="Score">
+          </div>
+          <div class="form-group">
+            <label>UCL Champion Team</label>
+            <input type="text" id="setUclChamp" placeholder="Champion Team Name">
+            <button class="btn btn-gold" onclick="updateUclKnockouts()">Save UCL Tournament</button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </main>
 
-  <!-- Bottom Floating Glass Navigation Bar with UCL Tab -->
+  <!-- Bottom Floating Glass Navigation Bar -->
   <nav class="bottom-nav">
     <button class="nav-item" onclick="switchTab('home')">
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -733,7 +953,7 @@
       <span>Matches</span>
     </button>
 
-    <button class="nav-item" onclick="switchTab('ucl')">
+    <button class="nav-item active" onclick="switchTab('ucl')">
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
       </svg>
@@ -751,7 +971,7 @@
       <span>Trophies</span>
     </button>
 
-    <button class="nav-item active" onclick="switchTab('admin')">
+    <button class="nav-item" onclick="switchTab('admin')">
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -781,13 +1001,31 @@
       ],
       results: [
         { id: 'r1', homeId: '5', awayId: '6', hScore: 3, aScore: 1, time: 'Yesterday' }
-      ]
+      ],
+      ucl: {
+        semiHome: 'Real',
+        semiHScore: 3,
+        semiAway: 'Monaco',
+        semiAScore: 2,
+        finalHome: 'Real Madrid',
+        finalHScore: 2,
+        finalAway: 'Sparta FC',
+        finalAScore: 1,
+        champion: 'Real Madrid'
+      }
     };
 
     function loadState() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         try { state = JSON.parse(saved); } catch (e) {}
+      }
+      if (!state.ucl) {
+        state.ucl = {
+          semiHome: 'Real', semiHScore: 3, semiAway: 'Monaco', semiAScore: 2,
+          finalHome: 'Real Madrid', finalHScore: 2, finalAway: 'Sparta FC', finalAScore: 1,
+          champion: 'Real Madrid'
+        };
       }
       renderAll();
     }
@@ -870,7 +1108,6 @@
     }
 
     function renderAll() {
-      // 1. League Titles
       document.querySelectorAll('.current-league-tag').forEach(tag => {
         tag.textContent = '🏆 ' + state.leagueName.toUpperCase();
       });
@@ -878,10 +1115,10 @@
       document.getElementById('leagueSeasonTag').textContent = 'Season ' + state.season;
       document.getElementById('uclSpotsLabel').textContent = 'Top ' + state.uclSpots;
 
-      // 2. Standings & Home Leader
       const table = calculateStandings();
       document.getElementById('homeLeaderDisplay').textContent = table[0] ? table[0].name : '--';
 
+      // 1. Regular League Table
       const tbody = document.getElementById('leagueTableBody');
       tbody.innerHTML = table.map((t, idx) => {
         const isUcl = idx < state.uclSpots;
@@ -916,15 +1153,45 @@
         `;
       }).join('');
 
-      // 3. UCL Qualified
-      const uclList = document.getElementById('uclQualifiedList');
-      const qualified = table.slice(0, state.uclSpots);
-      uclList.innerHTML = qualified.map((t, i) => `
-        <div style="padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between;">
-          <span>⭐ ${i+1}. ${t.name}</span>
-          <span style="color:var(--ucl-blue); font-weight:800;">Qualified</span>
-        </div>
-      `).join('') || '<div style="color:var(--muted);">No teams eligible yet.</div>';
+      // 2. UCL Group Stage Table (Top qualified clubs)
+      const uclTableBody = document.getElementById('uclGroupTableBody');
+      const uclQualifiedClubs = table.slice(0, state.uclSpots);
+      uclTableBody.innerHTML = uclQualifiedClubs.map((t, idx) => {
+        const isGroupChamp = idx === 0;
+        const gdClass = t.gd > 0 ? 'gd-positive' : (t.gd < 0 ? 'gd-negative' : '');
+        const gdSign = t.gd > 0 ? '+' : '';
+
+        return `
+          <tr class="${isGroupChamp ? 'ucl-qualify' : ''}">
+            <td>${idx + 1}</td>
+            <td class="team-col">
+              <span class="team-badge" style="border-color:var(--ucl-blue);">${t.name.charAt(0)}</span>
+              <span>${t.name}</span>
+            </td>
+            <td>${t.p}</td>
+            <td>${t.w}</td>
+            <td>${t.d}</td>
+            <td>${t.l}</td>
+            <td>${t.gf}</td>
+            <td>${t.ga}</td>
+            <td class="${gdClass}">${gdSign}${t.gd}</td>
+            <td class="pts-col" style="color:var(--ucl-blue); font-weight:900;">${t.pts}</td>
+          </tr>
+        `;
+      }).join('') || '<tr><td colspan="10" style="padding:14px; color:var(--muted);">No teams in group stage.</td></tr>';
+
+      // 3. UCL Knockouts & Champion Data
+      document.getElementById('semiHomeName').textContent = state.ucl.semiHome;
+      document.getElementById('semiHomeScore').textContent = state.ucl.semiHScore;
+      document.getElementById('semiAwayName').textContent = state.ucl.semiAway;
+      document.getElementById('semiAwayScore').textContent = state.ucl.semiAScore;
+
+      document.getElementById('finalHomeName').textContent = state.ucl.finalHome;
+      document.getElementById('finalHomeScore').textContent = state.ucl.finalHScore;
+      document.getElementById('finalAwayName').textContent = state.ucl.finalAway;
+      document.getElementById('finalAwayScore').textContent = state.ucl.finalAScore;
+
+      document.getElementById('uclWinnerName').textContent = state.ucl.champion;
 
       // 4. Fixtures & Results Tab
       const fixContainer = document.getElementById('sub-fixtures');
@@ -956,12 +1223,25 @@
         </div>
       `).join('');
 
-      // 6. Admin Dropdowns & Score Inputs
+      // 6. Admin Dropdowns & Team Removal List
       const teamOptions = state.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
       document.getElementById('fixtureHomeTeam').innerHTML = teamOptions;
       document.getElementById('fixtureAwayTeam').innerHTML = teamOptions;
+      document.getElementById('adminDeleteTeamSelect').innerHTML = teamOptions;
+
       document.getElementById('adminUclSpotsSelect').value = state.uclSpots;
       document.getElementById('adminLeagueNameInput').value = state.leagueName;
+
+      // Fill Admin UCL Inputs
+      document.getElementById('setSemiHome').value = state.ucl.semiHome;
+      document.getElementById('setSemiHScore').value = state.ucl.semiHScore;
+      document.getElementById('setSemiAway').value = state.ucl.semiAway;
+      document.getElementById('setSemiAScore').value = state.ucl.semiAScore;
+      document.getElementById('setFinalHome').value = state.ucl.finalHome;
+      document.getElementById('setFinalHScore').value = state.ucl.finalHScore;
+      document.getElementById('setFinalAway').value = state.ucl.finalAway;
+      document.getElementById('setFinalAScore').value = state.ucl.finalAScore;
+      document.getElementById('setUclChamp').value = state.ucl.champion;
 
       const adminFixList = document.getElementById('adminFixtureUpdateList');
       adminFixList.innerHTML = state.fixtures.map((f, i) => `
@@ -998,6 +1278,38 @@
       document.getElementById('adminNewTeamName').value = '';
       saveState();
       alert('New club added to the league!');
+    }
+
+    function deleteSelectedTeam() {
+      const teamId = document.getElementById('adminDeleteTeamSelect').value;
+      if (!teamId) return alert('No team selected to delete.');
+
+      const teamObj = state.teams.find(t => t.id === teamId);
+      if (!confirm(`Are you sure you want to delete ${teamObj.name}? All fixtures with this club will also be removed.`)) return;
+
+      state.teams = state.teams.filter(t => t.id !== teamId);
+      state.fixtures = state.fixtures.filter(f => f.homeId !== teamId && f.awayId !== teamId);
+      state.results = state.results.filter(r => r.homeId !== teamId && r.awayId !== teamId);
+
+      saveState();
+      alert('Team removed successfully!');
+    }
+
+    function updateUclKnockouts() {
+      state.ucl.semiHome = document.getElementById('setSemiHome').value || 'Real';
+      state.ucl.semiHScore = parseInt(document.getElementById('setSemiHScore').value) || 0;
+      state.ucl.semiAway = document.getElementById('setSemiAway').value || 'Monaco';
+      state.ucl.semiAScore = parseInt(document.getElementById('setSemiAScore').value) || 0;
+
+      state.ucl.finalHome = document.getElementById('setFinalHome').value || 'Real Madrid';
+      state.ucl.finalHScore = parseInt(document.getElementById('setFinalHScore').value) || 0;
+      state.ucl.finalAway = document.getElementById('setFinalAway').value || 'Sparta FC';
+      state.ucl.finalAScore = parseInt(document.getElementById('setFinalAScore').value) || 0;
+
+      state.ucl.champion = document.getElementById('setUclChamp').value || 'Real Madrid';
+
+      saveState();
+      alert('UCL Knockouts and Champion updated!');
     }
 
     function scheduleFixture() {
