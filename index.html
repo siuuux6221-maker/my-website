@@ -134,6 +134,140 @@
       text-transform: uppercase;
     }
 
+    /* HOME HERO WIDGETS */
+    .hero-leader-card {
+      background: var(--glass-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+      position: relative;
+    }
+
+    .hero-leader-card::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; width: 80px; height: 80px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 8px;
+    }
+
+    .hero-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-team-name {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-stats-right {
+      text-align: right;
+    }
+
+    .hero-pts {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .hero-pts-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-streak {
+      margin-top: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--win);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+
+    /* 2-COLUMN BOTTOM CHAMPIONS */
+    .champions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .champion-subcard {
+      background: var(--glass-card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 14px 14px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .champ-card-league {
+      border-color: rgba(255, 215, 0, 0.3);
+    }
+
+    .champ-card-ucl {
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    .champ-sub-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+    }
+
+    .champ-sub-name {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      text-transform: uppercase;
+      margin-top: 6px;
+      line-height: 1.2;
+    }
+
+    .champ-badge-tag {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-top: 6px;
+    }
+
     .table-card {
       background: var(--glass-card);
       backdrop-filter: blur(16px);
@@ -397,7 +531,6 @@
       align-self: center;
     }
 
-    /* UCL STAGE */
     .bracket-container {
       display: flex;
       flex-direction: column;
@@ -457,12 +590,6 @@
       width: 90px;
       height: 90px;
       filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
-      animation: floatTrophy 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes floatTrophy {
-      0% { transform: translateY(0px); }
-      100% { transform: translateY(-8px); }
     }
 
     .podium-winner-name {
@@ -487,7 +614,6 @@
       text-transform: uppercase;
     }
 
-    /* ADMIN ACCORDION */
     .admin-accordion {
       background: var(--glass-card);
       border: 1px solid var(--glass-border);
@@ -554,7 +680,6 @@
     .btn-danger { background: var(--loss); color: #fff; }
     .btn-gold { background: var(--gold); color: #03060d; }
 
-    /* BOTTOM NAV */
     .bottom-nav {
       position: fixed;
       bottom: 12px;
@@ -620,17 +745,53 @@
 
   <main class="content-area">
 
-    <!-- HOME TAB -->
-    <div id="page-home" class="view-card">
+    <!-- HOME TAB (Default active) -->
+    <div id="page-home" class="view-card active">
       <div class="league-banner">
         <div>
           <div class="league-title-label current-league-tag">🏆 CCNN SUPER LEAGUE</div>
           <div class="league-title-name">Home Dashboard</div>
         </div>
+        <div class="season-tag" id="homeSeasonTag">Season 1</div>
       </div>
-      <div class="match-glass-card" style="text-align:center; padding: 20px;">
-        <div style="font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:700;">Current Leader</div>
-        <div id="homeLeaderDisplay" style="font-size:20px; font-weight:900; color:var(--accent); margin-top:4px;">--</div>
+
+      <!-- Column 1: Current Leader with PTS & Streak -->
+      <div class="hero-leader-card">
+        <div class="hero-label">Current Leader</div>
+        <div class="hero-row">
+          <div class="hero-team-name">
+            <span class="team-badge" id="heroLeaderBadge">S</span>
+            <span id="heroLeaderName">Sparta FC</span>
+          </div>
+          <div class="hero-stats-right">
+            <div class="hero-pts" id="heroLeaderPts">13</div>
+            <div class="hero-pts-label">Points</div>
+            <div class="hero-streak" id="heroLeaderStreak">🔥 3W Streak</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 2 & 3: Last Season Champion & Last UCL Champion -->
+      <div class="champions-grid">
+        <div class="champion-subcard champ-card-league">
+          <div>
+            <div class="champ-sub-title">Last Season Champion</div>
+            <div class="champ-sub-name" id="homeLastLeagueChamp">Real Madrid</div>
+          </div>
+          <div>
+            <span class="champ-badge-tag" style="color:var(--gold);">🏆 League Winner</span>
+          </div>
+        </div>
+
+        <div class="champion-subcard champ-card-ucl">
+          <div>
+            <div class="champ-sub-title">Last UCL Champion</div>
+            <div class="champ-sub-name" id="homeLastUclChamp">Real Madrid</div>
+          </div>
+          <div>
+            <span class="champ-badge-tag" style="color:var(--ucl-blue);">⭐ UCL Winner</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -794,8 +955,8 @@
       </div>
     </div>
 
-    <!-- TROPHIES TAB (Active for review) -->
-    <div id="page-trophies" class="view-card active">
+    <!-- TROPHIES TAB -->
+    <div id="page-trophies" class="view-card">
       <div class="league-banner">
         <div>
           <div class="league-title-label current-league-tag">🏆 CCNN SUPER LEAGUE</div>
@@ -803,7 +964,6 @@
         </div>
       </div>
 
-      <!-- Column 1: Total Trophies Titles -->
       <div class="table-card">
         <div style="padding: 8px 12px; font-size:12px; font-weight:800; color:var(--accent); text-transform:uppercase;">
           1. Total Trophies Titles
@@ -820,7 +980,6 @@
         </table>
       </div>
 
-      <!-- Column 2: League Titles -->
       <div class="table-card">
         <div style="padding: 8px 12px; font-size:12px; font-weight:800; color:var(--gold); text-transform:uppercase;">
           2. League Titles
@@ -837,7 +996,6 @@
         </table>
       </div>
 
-      <!-- Column 3: UCL Titles -->
       <div class="table-card">
         <div style="padding: 8px 12px; font-size:12px; font-weight:800; color:var(--ucl-blue); text-transform:uppercase;">
           3. UCL Titles
@@ -865,10 +1023,10 @@
         <button onclick="lockAdmin()" style="background:transparent; border:1px solid var(--loss); color:var(--loss); padding:4px 8px; border-radius:6px; font-size:10px; font-weight:800; cursor:pointer;">LOCK 🔒</button>
       </div>
 
-      <!-- Accordion 1: League Settings -->
+      <!-- Accordion 1: League & Season Settings -->
       <div class="admin-accordion">
         <div class="admin-accordion-header" onclick="toggleAccordion(this)">
-          <span>1. League Settings</span>
+          <span>1. League & Season Settings</span>
           <span>▾</span>
         </div>
         <div class="admin-accordion-body open">
@@ -876,6 +1034,24 @@
             <label>League Name</label>
             <input type="text" id="adminLeagueNameInput" placeholder="e.g. CCNN Super League">
             <button class="btn" onclick="updateLeagueName()">Save League Name</button>
+          </div>
+
+          <!-- Season Edit Feature -->
+          <div class="form-group">
+            <label>Edit Season Number / Name</label>
+            <input type="text" id="adminSeasonInput" placeholder="e.g. Season 1 or Season 2">
+            <button class="btn" onclick="updateSeasonName()">Save Season</button>
+          </div>
+
+          <!-- Edit Previous Season Champions -->
+          <div class="form-group">
+            <label>Last Season League Champion</label>
+            <input type="text" id="adminLastLeagueChampInput" placeholder="e.g. Real Madrid">
+          </div>
+          <div class="form-group">
+            <label>Last Season UCL Champion</label>
+            <input type="text" id="adminLastUclChampInput" placeholder="e.g. Real Madrid">
+            <button class="btn" onclick="updatePastChampions()">Save Past Champions</button>
           </div>
 
           <div class="form-group">
@@ -939,10 +1115,10 @@
         </div>
       </div>
 
-      <!-- Accordion 3: UCL Customizer & Titles -->
+      <!-- Accordion 3: UCL Customizer -->
       <div class="admin-accordion">
         <div class="admin-accordion-header" onclick="toggleAccordion(this)">
-          <span>3. UCL Knockouts & Award UCL Trophy</span>
+          <span>3. UCL Knockouts</span>
           <span>▾</span>
         </div>
         <div class="admin-accordion-body">
@@ -968,13 +1144,35 @@
         </div>
       </div>
 
+      <!-- Accordion 4: Trophy Count Editor -->
+      <div class="admin-accordion">
+        <div class="admin-accordion-header" onclick="toggleAccordion(this)">
+          <span>4. Trophy Count Editor</span>
+          <span>▾</span>
+        </div>
+        <div class="admin-accordion-body">
+          <div class="form-group">
+            <label>Select Team</label>
+            <select id="trophyEditTeamSelect" onchange="loadTrophyCountsForSelectedTeam()"></select>
+          </div>
+          <div class="form-group">
+            <label>League Titles Count</label>
+            <input type="number" id="editLeagueTitlesCount" min="0">
+          </div>
+          <div class="form-group">
+            <label>UCL Titles Count</label>
+            <input type="number" id="editUclTitlesCount" min="0">
+            <button class="btn btn-gold" onclick="saveCustomTrophyCounts()">Save Trophy Counts 🏆</button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </main>
 
-  <!-- Bottom Floating Glass Navigation Bar -->
   <nav class="bottom-nav">
-    <button class="nav-item" onclick="switchTab('home')">
+    <button class="nav-item active" onclick="switchTab('home')">
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
         <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -1008,7 +1206,7 @@
       <span>UCL</span>
     </button>
 
-    <button class="nav-item active" onclick="switchTab('trophies')">
+    <button class="nav-item" onclick="switchTab('trophies')">
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"></path>
         <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"></path>
@@ -1034,20 +1232,24 @@
 
     let state = {
       leagueName: 'CCNN Super League',
-      season: 1,
+      season: 'Season 1',
+      lastLeagueChamp: 'Real Madrid',
+      lastUclChamp: 'Real Madrid',
       uclSpots: 4,
       teams: [
-        { id: '1', name: 'Real Madrid', leagueTitles: 4, uclTitles: 15 },
-        { id: '2', name: 'Japan', leagueTitles: 1, uclTitles: 0 },
-        { id: '3', name: 'Liverpool', leagueTitles: 1, uclTitles: 0 },
-        { id: '4', name: 'Sparta FC', leagueTitles: 0, uclTitles: 0 }
+        { id: '1', name: 'Sparta FC', leagueTitles: 0, uclTitles: 0 },
+        { id: '2', name: 'Titan SC', leagueTitles: 0, uclTitles: 0 },
+        { id: '3', name: 'Real Madrid', leagueTitles: 4, uclTitles: 15 },
+        { id: '4', name: 'Japan', leagueTitles: 1, uclTitles: 0 },
+        { id: '5', name: 'Liverpool', leagueTitles: 1, uclTitles: 0 }
       ],
       fixtures: [
-        { id: 'f1', comp: 'league', homeId: '1', awayId: '4', time: 'Today, 8:00 PM' },
-        { id: 'f2', comp: 'ucl', homeId: '1', awayId: '3', time: 'Tomorrow, 9:30 PM' }
+        { id: 'f1', comp: 'league', homeId: '1', awayId: '2', time: 'Today, 8:00 PM' }
       ],
       results: [
-        { id: 'r1', comp: 'league', homeId: '2', awayId: '3', hScore: 2, aScore: 1, time: 'Yesterday' }
+        { id: 'r1', comp: 'league', homeId: '1', awayId: '4', hScore: 2, aScore: 0, time: 'Round 1' },
+        { id: 'r2', comp: 'league', homeId: '1', awayId: '5', hScore: 3, aScore: 1, time: 'Round 2' },
+        { id: 'r3', comp: 'league', homeId: '1', awayId: '2', hScore: 1, aScore: 0, time: 'Round 3' }
       ],
       ucl: {
         semiHome: 'Real',
@@ -1068,8 +1270,12 @@
         try { state = JSON.parse(saved); } catch (e) {}
       }
 
+      if (typeof state.season === 'number') state.season = 'Season ' + state.season;
+      if (!state.lastLeagueChamp) state.lastLeagueChamp = 'Real Madrid';
+      if (!state.lastUclChamp) state.lastUclChamp = 'Real Madrid';
+
       state.teams.forEach(t => {
-        if (t.leagueTitles === undefined) t.leagueTitles = t.trophies || 0;
+        if (t.leagueTitles === undefined) t.leagueTitles = 0;
         if (t.uclTitles === undefined) t.uclTitles = 0;
       });
 
@@ -1140,11 +1346,12 @@
         id: t.id,
         name: t.name,
         p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0,
-        form: []
+        form: [],
+        streak: 0
       }));
 
       state.results.forEach(r => {
-        if (r.comp === 'ucl') return; // Only league matches affect league table
+        if (r.comp === 'ucl') return;
         const home = standings.find(t => t.id === r.homeId);
         const away = standings.find(t => t.id === r.awayId);
         if (!home || !away) return;
@@ -1167,6 +1374,15 @@
         }
       });
 
+      standings.forEach(t => {
+        let count = 0;
+        for (let i = t.form.length - 1; i >= 0; i--) {
+          if (t.form[i] === 'W') count++;
+          else break;
+        }
+        t.streak = count;
+      });
+
       return standings.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
     }
 
@@ -1175,13 +1391,23 @@
         tag.textContent = '🏆 ' + state.leagueName.toUpperCase();
       });
       document.getElementById('leagueHeaderName').textContent = state.leagueName;
-      document.getElementById('leagueSeasonTag').textContent = 'Season ' + state.season;
+      document.getElementById('homeSeasonTag').textContent = state.season;
+      document.getElementById('leagueSeasonTag').textContent = state.season;
       document.getElementById('uclSpotsLabel').textContent = 'Top ' + state.uclSpots;
 
       const table = calculateStandings();
-      document.getElementById('homeLeaderDisplay').textContent = table[0] ? table[0].name : '--';
 
-      // 1. League Table
+      // 1. HOME TAB RENDERING
+      const leader = table[0] || { name: 'No Team', pts: 0, streak: 0 };
+      document.getElementById('heroLeaderName').textContent = leader.name;
+      document.getElementById('heroLeaderBadge').textContent = leader.name.charAt(0);
+      document.getElementById('heroLeaderPts').textContent = leader.pts;
+      document.getElementById('heroLeaderStreak').textContent = leader.streak > 0 ? `🔥 ${leader.streak}W Streak` : `⚪ 0W Streak`;
+
+      document.getElementById('homeLastLeagueChamp').textContent = state.lastLeagueChamp;
+      document.getElementById('homeLastUclChamp').textContent = state.lastUclChamp;
+
+      // 2. LEAGUE TABLE RENDERING
       const tbody = document.getElementById('leagueTableBody');
       tbody.innerHTML = table.map((t, idx) => {
         const isUcl = idx < state.uclSpots;
@@ -1216,7 +1442,7 @@
         `;
       }).join('');
 
-      // 2. UCL Group Stage
+      // 3. UCL GROUP STAGE
       const uclTableBody = document.getElementById('uclGroupTableBody');
       const uclQualifiedClubs = table.slice(0, state.uclSpots);
       uclTableBody.innerHTML = uclQualifiedClubs.map((t, idx) => {
@@ -1243,7 +1469,7 @@
         `;
       }).join('') || '<tr><td colspan="10" style="padding:14px; color:var(--muted);">No teams in group stage.</td></tr>';
 
-      // 3. UCL Knockouts Data
+      // UCL Knockouts
       document.getElementById('semiHomeName').textContent = state.ucl.semiHome;
       document.getElementById('semiHomeScore').textContent = state.ucl.semiHScore;
       document.getElementById('semiAwayName').textContent = state.ucl.semiAway;
@@ -1255,7 +1481,7 @@
       document.getElementById('finalAwayScore').textContent = state.ucl.finalAScore;
       document.getElementById('uclWinnerName').textContent = state.ucl.champion;
 
-      // 4. Fixtures & Results Tab
+      // 4. FIXTURES & RESULTS
       const fixContainer = document.getElementById('sub-fixtures');
       fixContainer.innerHTML = state.fixtures.map(f => {
         const isUcl = f.comp === 'ucl';
@@ -1287,8 +1513,7 @@
         `;
       }).join('') || '<p style="text-align:center; color:var(--muted); padding:20px;">No results recorded.</p>';
 
-      // 5. TROPHY CABINETS (3 Columns from drawing)
-      // Column 1: Total Trophies
+      // 5. TROPHY CABINETS
       const totalSorted = [...state.teams].sort((a,b) => (b.leagueTitles + b.uclTitles) - (a.leagueTitles + a.uclTitles));
       document.getElementById('totalTrophiesBody').innerHTML = totalSorted.map((t, idx) => `
         <tr>
@@ -1298,7 +1523,6 @@
         </tr>
       `).join('');
 
-      // Column 2: League Titles
       const leagueSorted = [...state.teams].sort((a,b) => b.leagueTitles - a.leagueTitles);
       document.getElementById('leagueTitlesBody').innerHTML = leagueSorted.map((t, idx) => `
         <tr>
@@ -1308,7 +1532,6 @@
         </tr>
       `).join('');
 
-      // Column 3: UCL Titles
       const uclSorted = [...state.teams].sort((a,b) => b.uclTitles - a.uclTitles);
       document.getElementById('uclTitlesBody').innerHTML = uclSorted.map((t, idx) => `
         <tr>
@@ -1318,15 +1541,21 @@
         </tr>
       `).join('');
 
-      // 6. Admin Controls
+      // 6. ADMIN POPULATION
       const teamOptions = state.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
       document.getElementById('fixtureHomeTeam').innerHTML = teamOptions;
       document.getElementById('fixtureAwayTeam').innerHTML = teamOptions;
       document.getElementById('adminDeleteTeamSelect').innerHTML = teamOptions;
       document.getElementById('setUclChampSelect').innerHTML = teamOptions;
+      document.getElementById('trophyEditTeamSelect').innerHTML = teamOptions;
 
       document.getElementById('adminUclSpotsSelect').value = state.uclSpots;
       document.getElementById('adminLeagueNameInput').value = state.leagueName;
+      document.getElementById('adminSeasonInput').value = state.season;
+      document.getElementById('adminLastLeagueChampInput').value = state.lastLeagueChamp;
+      document.getElementById('adminLastUclChampInput').value = state.lastUclChamp;
+
+      loadTrophyCountsForSelectedTeam();
 
       document.getElementById('setSemiHome').value = state.ucl.semiHome;
       document.getElementById('setSemiHScore').value = state.ucl.semiHScore;
@@ -1354,13 +1583,48 @@
       `).join('') || '<div style="color:var(--muted); font-size:12px;">No matches awaiting score entry.</div>';
     }
 
-    /* Actions */
+    /* Admin Action Functions */
     function updateLeagueName() {
       const val = document.getElementById('adminLeagueNameInput').value.trim();
       if (!val) return alert('Enter a valid league name');
       state.leagueName = val;
       saveState();
       alert('League name updated successfully!');
+    }
+
+    function updateSeasonName() {
+      const val = document.getElementById('adminSeasonInput').value.trim();
+      if (!val) return alert('Enter a season name (e.g. Season 2)');
+      state.season = val;
+      saveState();
+      alert('Season name updated successfully!');
+    }
+
+    function updatePastChampions() {
+      state.lastLeagueChamp = document.getElementById('adminLastLeagueChampInput').value.trim() || 'None';
+      state.lastUclChamp = document.getElementById('adminLastUclChampInput').value.trim() || 'None';
+      saveState();
+      alert('Past champions updated on Home screen!');
+    }
+
+    function loadTrophyCountsForSelectedTeam() {
+      const selId = document.getElementById('trophyEditTeamSelect').value;
+      const team = state.teams.find(t => t.id === selId);
+      if (team) {
+        document.getElementById('editLeagueTitlesCount').value = team.leagueTitles;
+        document.getElementById('editUclTitlesCount').value = team.uclTitles;
+      }
+    }
+
+    function saveCustomTrophyCounts() {
+      const selId = document.getElementById('trophyEditTeamSelect').value;
+      const team = state.teams.find(t => t.id === selId);
+      if (!team) return;
+
+      team.leagueTitles = parseInt(document.getElementById('editLeagueTitlesCount').value) || 0;
+      team.uclTitles = parseInt(document.getElementById('editUclTitlesCount').value) || 0;
+      saveState();
+      alert(`Trophy counts updated for ${team.name}!`);
     }
 
     function updateUclSpots() {
@@ -1453,12 +1717,12 @@
       if (table.length === 0) return;
       const winner = table[0];
 
-      if (!confirm(`Crown ${winner.name} as League Champion and finish Season ${state.season}?`)) return;
+      if (!confirm(`Crown ${winner.name} as League Champion and finish ${state.season}?`)) return;
 
       const teamObj = state.teams.find(t => t.id === winner.id);
       if (teamObj) teamObj.leagueTitles++;
 
-      state.season++;
+      state.lastLeagueChamp = winner.name;
       state.results = [];
       state.fixtures = [];
       saveState();
