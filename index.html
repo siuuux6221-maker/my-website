@@ -6,13 +6,23 @@
   <title>CCNN Esport</title>
   <style>
     :root {
-      --glass-bg: rgba(16, 24, 48, 0.55);
+      --glass-bg: rgba(16, 24, 48, 0.65);
+      --glass-card: rgba(14, 22, 42, 0.72);
       --glass-border: rgba(0, 229, 255, 0.22);
       --glass-shine: rgba(255, 255, 255, 0.08);
       --accent: #00e5ff;
       --accent-glow: rgba(0, 229, 255, 0.35);
+      --ucl-blue: #3b82f6;
+      --ucl-glow: rgba(59, 130, 246, 0.55);
+      --gold: #ffd700;
       --text: #f8fafc;
       --muted: #8fa0be;
+
+      /* Match Indicator Colors */
+      --win: #22c55e;
+      --draw: #94a3b8;
+      --loss: #ef4444;
+      --notplayed: #334155;
     }
 
     * {
@@ -24,30 +34,29 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 10%, #152243 0%, #080d1a 60%, #03060d 100%);
+      background: radial-gradient(circle at 50% 5%, #16264c 0%, #080e1b 55%, #03060d 100%);
       min-height: 100vh;
       color: var(--text);
-      padding-bottom: 90px;
-      position: relative;
+      padding-bottom: 95px;
       overflow-x: hidden;
     }
 
-    /* Ambient Liquid Lights */
+    /* Ambient Liquid Glow */
     body::before {
       content: "";
       position: fixed;
-      top: -100px;
+      top: -90px;
       left: 50%;
       transform: translateX(-50%);
       width: 320px;
       height: 320px;
-      background: radial-gradient(circle, rgba(0, 229, 255, 0.25) 0%, transparent 70%);
-      filter: blur(50px);
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.22) 0%, transparent 70%);
+      filter: blur(55px);
       z-index: 0;
       pointer-events: none;
     }
 
-    /* Liquid Glass Top Header */
+    /* Sticky Glass Header */
     header {
       position: sticky;
       top: 0;
@@ -57,61 +66,248 @@
       -webkit-backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--glass-border);
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 var(--glass-shine);
-      padding: 16px 20px;
+      padding: 14px 20px;
       text-align: center;
     }
 
     .website-name {
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 900;
       letter-spacing: 2px;
       text-transform: uppercase;
       background: linear-gradient(135deg, #ffffff 30%, var(--accent) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px var(--accent-glow);
+      text-shadow: 0 0 16px var(--accent-glow);
     }
 
-    /* Page Area */
+    /* Main Container */
     .content-area {
       position: relative;
       z-index: 1;
-      padding: 24px 16px;
-      max-width: 650px;
+      padding: 16px;
+      max-width: 680px;
       margin: auto;
     }
 
-    .view-card {
-      display: none;
-      background: var(--glass-bg);
+    .view-card { display: none; }
+    .view-card.active { display: block; }
+
+    /* League Header Banner */
+    .league-banner {
+      background: var(--glass-card);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .league-title-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }
+
+    .league-title-name {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+      text-transform: uppercase;
+    }
+
+    .season-tag {
+      background: rgba(0, 229, 255, 0.12);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 10px;
       border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 1px var(--glass-shine);
+      text-transform: uppercase;
+    }
+
+    /* Glass Table Container */
+    .table-card {
+      background: var(--glass-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 12px 6px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45), inset 0 1px 1px var(--glass-shine);
+      overflow-x: auto;
+    }
+
+    .table-card::-webkit-scrollbar { height: 4px; }
+    .table-card::-webkit-scrollbar-thumb {
+      background: var(--glass-border);
+      border-radius: 4px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 560px;
+      border-collapse: collapse;
+      font-size: 13px;
       text-align: center;
     }
 
-    .view-card.active {
-      display: block;
-    }
-
-    .view-card h2 {
-      font-size: 18px;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      font-weight: 800;
-    }
-
-    .view-card p {
-      font-size: 13px;
+    th {
       color: var(--muted);
-      line-height: 1.5;
+      padding: 10px 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    /* Bottom Liquid Glass Navigation Bar */
+    td {
+      padding: 11px 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    /* Blue Accent Strip for UCL Qualification */
+    tr.ucl-qualify td:first-child {
+      position: relative;
+    }
+
+    tr.ucl-qualify td:first-child::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 18%;
+      height: 64%;
+      width: 3.5px;
+      background: var(--ucl-blue);
+      border-radius: 3px;
+      box-shadow: 0 0 8px var(--ucl-glow);
+    }
+
+    .team-col {
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 700;
+    }
+
+    .team-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1f2d4e, #11192e);
+      border: 1px solid var(--glass-border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .pts-col {
+      color: var(--accent);
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    .gd-positive { color: #34d399; }
+    .gd-negative { color: #f87171; }
+
+    /* SVG Match Status Badges */
+    .match-strip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-badge {
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .badge-win { background: var(--win); color: #fff; }
+    .badge-draw { background: var(--draw); color: #fff; }
+    .badge-loss { background: var(--loss); color: #fff; }
+    .badge-unplayed {
+      background: transparent;
+      border: 2px solid #475569;
+    }
+
+    .status-badge svg {
+      width: 10px;
+      height: 10px;
+      stroke: #fff;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    /* Qualification & Relegation Section */
+    .legend-card {
+      margin-top: 14px;
+      padding: 14px 18px;
+      background: var(--glass-card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.35);
+    }
+
+    .legend-heading {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: #cbd5e1;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .legend-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .ucl-square {
+      width: 14px;
+      height: 14px;
+      background: var(--ucl-blue);
+      border-radius: 3px;
+      box-shadow: 0 0 10px var(--ucl-glow);
+      flex-shrink: 0;
+    }
+
+    /* Bottom Glass Tab Bar */
     .bottom-nav {
       position: fixed;
       bottom: 12px;
@@ -119,7 +315,7 @@
       right: 12px;
       max-width: 500px;
       margin: auto;
-      background: rgba(14, 20, 38, 0.75);
+      background: rgba(14, 20, 38, 0.78);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
@@ -158,7 +354,6 @@
       transition: all 0.25s ease;
     }
 
-    /* Active State Glow */
     .nav-item.active {
       color: var(--accent);
       background: rgba(0, 229, 255, 0.12);
@@ -178,38 +373,245 @@
     <div class="website-name">CCNN Esport</div>
   </header>
 
-  <!-- Page Displays -->
+  <!-- Main Views Container -->
   <main class="content-area">
-    <div id="page-home" class="view-card active">
-      <h2>Home Screen</h2>
-      <p>Liquid glass layout initialized. Ready for the home dashboard content.</p>
+
+    <!-- HOME TAB -->
+    <div id="page-home" class="view-card">
+      <div class="league-banner">
+        <div>
+          <div class="league-title-label">Welcome</div>
+          <div class="league-title-name">Home Dashboard</div>
+        </div>
+      </div>
+      <p style="text-align: center; color: var(--muted); font-size: 13px; margin-top: 20px;">
+        Tap <strong>League</strong> on the bottom menu to view the full point table!
+      </p>
     </div>
 
-    <div id="page-league" class="view-card">
-      <h2>League Table</h2>
-      <p>Standings and team positions will appear here.</p>
+    <!-- LEAGUE TAB -->
+    <div id="page-league" class="view-card active">
+      
+      <!-- Top League Name Banner -->
+      <div class="league-banner">
+        <div>
+          <div class="league-title-label">League Name</div>
+          <div class="league-title-name">CCNN Super League</div>
+        </div>
+        <div class="season-tag">Season 1</div>
+      </div>
+
+      <!-- Point Table -->
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 30px;">Pos</th>
+              <th style="text-align: left;">Club</th>
+              <th>P</th>
+              <th>W</th>
+              <th>D</th>
+              <th>L</th>
+              <th>GF</th>
+              <th>GA</th>
+              <th>GD</th>
+              <th class="pts-col">PTS</th>
+              <th>Last 5 matches</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 1st Sparta FC -->
+            <tr class="ucl-qualify">
+              <td>1</td>
+              <td class="team-col">
+                <span class="team-badge" style="border-color: #00e5ff;">S</span>
+                <span>Sparta FC</span>
+              </td>
+              <td>5</td><td>4</td><td>1</td><td>0</td><td>12</td><td>2</td>
+              <td class="gd-positive">+10</td>
+              <td class="pts-col">13</td>
+              <td>
+                <div class="match-strip">
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="status-badge badge-draw"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line></svg></span>
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 2nd Titan SC -->
+            <tr class="ucl-qualify">
+              <td>2</td>
+              <td class="team-col">
+                <span class="team-badge">T</span>
+                <span>Titan SC</span>
+              </td>
+              <td>5</td><td>3</td><td>2</td><td>0</td><td>9</td><td>3</td>
+              <td class="gd-positive">+6</td>
+              <td class="pts-col">11</td>
+              <td>
+                <div class="match-strip">
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="status-badge badge-draw"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line></svg></span>
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="status-badge badge-draw"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line></svg></span>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 3rd Viper Gaming -->
+            <tr class="ucl-qualify">
+              <td>3</td>
+              <td class="team-col">
+                <span class="team-badge">V</span>
+                <span>Viper Gaming</span>
+              </td>
+              <td>5</td><td>3</td><td>0</td><td>2</td><td>8</td><td>6</td>
+              <td class="gd-positive">+2</td>
+              <td class="pts-col">9</td>
+              <td>
+                <div class="match-strip">
+                  <span class="status-badge badge-loss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="status-badge badge-loss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 4th Apex United -->
+            <tr class="ucl-qualify">
+              <td>4</td>
+              <td class="team-col">
+                <span class="team-badge">A</span>
+                <span>Apex United</span>
+              </td>
+              <td>4</td><td>2</td><td>1</td><td>1</td><td>5</td><td>4</td>
+              <td class="gd-positive">+1</td>
+              <td class="pts-col">7</td>
+              <td>
+                <div class="match-strip">
+                  <span class="status-badge badge-draw"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line></svg></span>
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="status-badge badge-loss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="status-badge badge-unplayed"></span>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 5th Zambia SC -->
+            <tr>
+              <td>5</td>
+              <td class="team-col">
+                <span class="team-badge">Z</span>
+                <span>Zambia SC</span>
+              </td>
+              <td>4</td><td>1</td><td>0</td><td>3</td><td>3</td><td>8</td>
+              <td class="gd-negative">-5</td>
+              <td class="pts-col">3</td>
+              <td>
+                <div class="match-strip">
+                  <span class="status-badge badge-loss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  <span class="status-badge badge-loss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  <span class="status-badge badge-win"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="status-badge badge-loss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  <span class="status-badge badge-unplayed"></span>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 6th Manchester B -->
+            <tr>
+              <td>6</td>
+              <td class="team-col">
+                <span class="team-badge">M</span>
+                <span>Manchester B</span>
+              </td>
+              <td>4</td><td>0</td><td>0</td><td>4</td><td>1</td><td>14</td>
+              <td class="gd-negative">-13</td>
+              <td class="pts-col">0</td>
+              <td>
+                <div class="match-strip">
+                  <span class="status-badge badge-loss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  <span class="status-badge badge-loss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  <span class="status-badge badge-loss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  <span class="status-badge badge-loss"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  <span class="status-badge badge-unplayed"></span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 1. Qualification/Relegation Legend -->
+      <div class="legend-card">
+        <div class="legend-heading">Qualification/Relegation</div>
+        <div class="legend-row">
+          <div class="ucl-square"></div>
+          <span>UEFA Champions League group stage</span>
+        </div>
+      </div>
+
+      <!-- 2. Last 5 Matches Legend -->
+      <div class="legend-card">
+        <div class="legend-heading">Last 5 matches</div>
+        
+        <div class="legend-row">
+          <span class="status-badge badge-win">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </span>
+          <span>Win</span>
+        </div>
+
+        <div class="legend-row">
+          <span class="status-badge badge-draw">
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </span>
+          <span>Draw</span>
+        </div>
+
+        <div class="legend-row">
+          <span class="status-badge badge-loss">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </span>
+          <span>Loss</span>
+        </div>
+
+        <div class="legend-row">
+          <span class="status-badge badge-unplayed"></span>
+          <span>Not played</span>
+        </div>
+      </div>
+
     </div>
 
+    <!-- PLACEHOLDERS FOR REMAINING TABS -->
     <div id="page-fixtures" class="view-card">
-      <h2>Fixtures</h2>
-      <p>Upcoming match schedule will appear here.</p>
+      <div class="league-banner"><div class="league-title-name">Fixtures</div></div>
+      <p style="color:var(--muted); text-align:center;">Fixtures tab up next.</p>
     </div>
 
     <div id="page-trophies" class="view-card">
-      <h2>Trophies</h2>
-      <p>Championships, achievements, and legacy cabinet will appear here.</p>
+      <div class="league-banner"><div class="league-title-name">Trophies & Legacy</div></div>
+      <p style="color:var(--muted); text-align:center;">Trophy cabinets will appear here.</p>
     </div>
 
     <div id="page-admin" class="view-card">
-      <h2>Admin Controls</h2>
-      <p>Score entries and league settings will appear here.</p>
+      <div class="league-banner"><div class="league-title-name">Admin Controls</div></div>
+      <p style="color:var(--muted); text-align:center;">Admin tools will appear here.</p>
     </div>
+
   </main>
 
   <!-- Bottom Floating Glass Tab Bar -->
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchTab('home')">
-      <!-- Home Icon -->
+    <button class="nav-item" onclick="switchTab('home')">
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
         <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -217,8 +619,7 @@
       <span>Home</span>
     </button>
 
-    <button class="nav-item" onclick="switchTab('league')">
-      <!-- League / Table Icon -->
+    <button class="nav-item active" onclick="switchTab('league')">
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
         <line x1="3" y1="9" x2="21" y2="9"></line>
@@ -228,7 +629,6 @@
     </button>
 
     <button class="nav-item" onclick="switchTab('fixtures')">
-      <!-- Fixtures / Calendar Icon -->
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
         <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -239,7 +639,6 @@
     </button>
 
     <button class="nav-item" onclick="switchTab('trophies')">
-      <!-- Trophies Icon -->
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"></path>
         <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"></path>
@@ -251,7 +650,6 @@
     </button>
 
     <button class="nav-item" onclick="switchTab('admin')">
-      <!-- Admin / Shield Lock Icon -->
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -270,9 +668,7 @@
       });
 
       const target = document.getElementById('page-' + tabKey);
-      if (target) {
-        target.classList.add('active');
-      }
+      if (target) target.classList.add('active');
 
       const buttons = document.querySelectorAll('.nav-item');
       buttons.forEach(function(btn) {
