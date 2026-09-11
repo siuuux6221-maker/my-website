@@ -761,6 +761,11 @@
 </head>
 <body>
 
+  <!-- UCL Anthem Audio Player -->
+  <audio id="uclAnthemAudio" preload="auto">
+    <source src="https://ia800902.us.archive.org/27/items/uefa-champions-league-anthem/uefa-champions-league-anthem.mp3" type="audio/mpeg">
+  </audio>
+
   <header>
     <div class="website-name">CCNN Esport</div>
     <div class="live-indicator"><span class="live-dot"></span> LIVE SYNC</div>
@@ -1323,18 +1328,37 @@
         }
       }
 
+      // Handle UCL Anthem Audio
+      const uclAudio = document.getElementById('uclAnthemAudio');
+      if (uclAudio) {
+        if (tabKey === 'ucl') {
+          uclAudio.currentTime = 0;
+          uclAudio.play().catch(e => console.log("Autoplay blocked:", e));
+        } else {
+          uclAudio.pause();
+        }
+      }
+
+      // Hide all tabs and remove all active highlights
       document.querySelectorAll('.view-card').forEach(c => c.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
 
+      // Show selected tab
       const target = document.getElementById('page-' + tabKey);
       if (target) target.classList.add('active');
 
+      // Highlight active button (matches 'fixtures' with 'matches')
       const buttons = document.querySelectorAll('.nav-item');
       buttons.forEach(btn => {
-        if (btn.querySelector('span').textContent.toLowerCase().includes(tabKey.toLowerCase())) {
+        const btnText = btn.querySelector('span').textContent.toLowerCase().trim();
+        if (
+          btnText === tabKey.toLowerCase() ||
+          (tabKey === 'fixtures' && btnText === 'matches')
+        ) {
           btn.classList.add('active');
         }
       });
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
