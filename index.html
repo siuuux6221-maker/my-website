@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CCNN Esport</title>
+
+  <!-- Firebase App & Realtime Database SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <style>
     :root {
       --glass-bg: rgba(16, 24, 48, 0.65);
@@ -76,6 +81,24 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 16px var(--accent-glow);
+    }
+
+    .live-indicator {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--win);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--win);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--win);
     }
 
     .content-area {
@@ -213,7 +236,6 @@
       gap: 4px;
     }
 
-    /* 2-COLUMN BOTTOM CHAMPIONS */
     .champions-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -741,11 +763,12 @@
 
   <header>
     <div class="website-name">CCNN Esport</div>
+    <div class="live-indicator"><span class="live-dot"></span> LIVE SYNC</div>
   </header>
 
   <main class="content-area">
 
-    <!-- HOME TAB (Default active) -->
+    <!-- HOME TAB -->
     <div id="page-home" class="view-card active">
       <div class="league-banner">
         <div>
@@ -755,7 +778,6 @@
         <div class="season-tag" id="homeSeasonTag">Season 1</div>
       </div>
 
-      <!-- Column 1: Current Leader with PTS & Streak -->
       <div class="hero-leader-card">
         <div class="hero-label">Current Leader</div>
         <div class="hero-row">
@@ -771,7 +793,6 @@
         </div>
       </div>
 
-      <!-- Column 2 & 3: Last Season Champion & Last UCL Champion -->
       <div class="champions-grid">
         <div class="champion-subcard champ-card-league">
           <div>
@@ -1036,14 +1057,12 @@
             <button class="btn" onclick="updateLeagueName()">Save League Name</button>
           </div>
 
-          <!-- Season Edit Feature -->
           <div class="form-group">
             <label>Edit Season Number / Name</label>
             <input type="text" id="adminSeasonInput" placeholder="e.g. Season 1 or Season 2">
             <button class="btn" onclick="updateSeasonName()">Save Season</button>
           </div>
 
-          <!-- Edit Previous Season Champions -->
           <div class="form-group">
             <label>Last Season League Champion</label>
             <input type="text" id="adminLastLeagueChampInput" placeholder="e.g. Real Madrid">
@@ -1227,10 +1246,24 @@
   </nav>
 
   <script>
-    const STORAGE_KEY = 'CCNN_COMPREHENSIVE_STATE';
+    // EXACT FIREBASE CREDENTIALS
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQ9Gt_u581RDoc4OlJ2yC-bk5SFqR-fC8",
+      authDomain: "ccnn-esport.firebaseapp.com",
+      databaseURL: "https://ccnn-esport-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "ccnn-esport",
+      storageBucket: "ccnn-esport.firebasestorage.app",
+      messagingSenderId: "303400637615",
+      appId: "1:303400637615:web:a321d54cf048f54820705a"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const stateRef = db.ref('esport_state');
+
     let isAdminUnlocked = false;
 
-    let state = {
+    let defaultState = {
       leagueName: 'CCNN Super League',
       season: 'Season 1',
       lastLeagueChamp: 'Real Madrid',
@@ -1243,14 +1276,8 @@
         { id: '4', name: 'Japan', leagueTitles: 1, uclTitles: 0 },
         { id: '5', name: 'Liverpool', leagueTitles: 1, uclTitles: 0 }
       ],
-      fixtures: [
-        { id: 'f1', comp: 'league', homeId: '1', awayId: '2', time: 'Today, 8:00 PM' }
-      ],
-      results: [
-        { id: 'r1', comp: 'league', homeId: '1', awayId: '4', hScore: 2, aScore: 0, time: 'Round 1' },
-        { id: 'r2', comp: 'league', homeId: '1', awayId: '5', hScore: 3, aScore: 1, time: 'Round 2' },
-        { id: 'r3', comp: 'league', homeId: '1', awayId: '2', hScore: 1, aScore: 0, time: 'Round 3' }
-      ],
+      fixtures: [],
+      results: [],
       ucl: {
         semiHome: 'Real',
         semiHScore: 3,
@@ -1264,27 +1291,25 @@
       }
     };
 
-    function loadState() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try { state = JSON.parse(saved); } catch (e) {}
+    let state = defaultState;
+
+    // Realtime Sync Listener - Updates UI on all devices instantly
+    stateRef.on('value', snapshot => {
+      const data = snapshot.val();
+      if (data) {
+        state = data;
+        if (!state.teams) state.teams = [];
+        if (!state.fixtures) state.fixtures = [];
+        if (!state.results) state.results = [];
+        if (!state.ucl) state.ucl = defaultState.ucl;
+      } else {
+        stateRef.set(defaultState);
       }
-
-      if (typeof state.season === 'number') state.season = 'Season ' + state.season;
-      if (!state.lastLeagueChamp) state.lastLeagueChamp = 'Real Madrid';
-      if (!state.lastUclChamp) state.lastUclChamp = 'Real Madrid';
-
-      state.teams.forEach(t => {
-        if (t.leagueTitles === undefined) t.leagueTitles = 0;
-        if (t.uclTitles === undefined) t.uclTitles = 0;
-      });
-
       renderAll();
-    }
+    });
 
     function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      renderAll();
+      stateRef.set(state);
     }
 
     function switchTab(tabKey) {
@@ -1350,7 +1375,7 @@
         streak: 0
       }));
 
-      state.results.forEach(r => {
+      (state.results || []).forEach(r => {
         if (r.comp === 'ucl') return;
         const home = standings.find(t => t.id === r.homeId);
         const away = standings.find(t => t.id === r.awayId);
@@ -1388,7 +1413,7 @@
 
     function renderAll() {
       document.querySelectorAll('.current-league-tag').forEach(tag => {
-        tag.textContent = '🏆 ' + state.leagueName.toUpperCase();
+        tag.textContent = '🏆 ' + (state.leagueName || 'LEAGUE').toUpperCase();
       });
       document.getElementById('leagueHeaderName').textContent = state.leagueName;
       document.getElementById('homeSeasonTag').textContent = state.season;
@@ -1397,17 +1422,17 @@
 
       const table = calculateStandings();
 
-      // 1. HOME TAB RENDERING
+      // Home Leader Hero
       const leader = table[0] || { name: 'No Team', pts: 0, streak: 0 };
       document.getElementById('heroLeaderName').textContent = leader.name;
       document.getElementById('heroLeaderBadge').textContent = leader.name.charAt(0);
       document.getElementById('heroLeaderPts').textContent = leader.pts;
       document.getElementById('heroLeaderStreak').textContent = leader.streak > 0 ? `🔥 ${leader.streak}W Streak` : `⚪ 0W Streak`;
 
-      document.getElementById('homeLastLeagueChamp').textContent = state.lastLeagueChamp;
-      document.getElementById('homeLastUclChamp').textContent = state.lastUclChamp;
+      document.getElementById('homeLastLeagueChamp').textContent = state.lastLeagueChamp || '--';
+      document.getElementById('homeLastUclChamp').textContent = state.lastUclChamp || '--';
 
-      // 2. LEAGUE TABLE RENDERING
+      // League Table
       const tbody = document.getElementById('leagueTableBody');
       tbody.innerHTML = table.map((t, idx) => {
         const isUcl = idx < state.uclSpots;
@@ -1425,10 +1450,7 @@
         return `
           <tr class="${isUcl ? 'ucl-qualify' : ''}">
             <td>${idx + 1}</td>
-            <td class="team-col">
-              <span class="team-badge">${t.name.charAt(0)}</span>
-              <span>${t.name}</span>
-            </td>
+            <td class="team-col"><span class="team-badge">${t.name.charAt(0)}</span><span>${t.name}</span></td>
             <td>${t.p}</td>
             <td>${t.w}</td>
             <td>${t.d}</td>
@@ -1442,7 +1464,7 @@
         `;
       }).join('');
 
-      // 3. UCL GROUP STAGE
+      // UCL Table
       const uclTableBody = document.getElementById('uclGroupTableBody');
       const uclQualifiedClubs = table.slice(0, state.uclSpots);
       uclTableBody.innerHTML = uclQualifiedClubs.map((t, idx) => {
@@ -1453,10 +1475,7 @@
         return `
           <tr class="${isGroupChamp ? 'ucl-qualify' : ''}">
             <td>${idx + 1}</td>
-            <td class="team-col">
-              <span class="team-badge" style="border-color:var(--ucl-blue);">${t.name.charAt(0)}</span>
-              <span>${t.name}</span>
-            </td>
+            <td class="team-col"><span class="team-badge" style="border-color:var(--ucl-blue);">${t.name.charAt(0)}</span><span>${t.name}</span></td>
             <td>${t.p}</td>
             <td>${t.w}</td>
             <td>${t.d}</td>
@@ -1470,20 +1489,22 @@
       }).join('') || '<tr><td colspan="10" style="padding:14px; color:var(--muted);">No teams in group stage.</td></tr>';
 
       // UCL Knockouts
-      document.getElementById('semiHomeName').textContent = state.ucl.semiHome;
-      document.getElementById('semiHomeScore').textContent = state.ucl.semiHScore;
-      document.getElementById('semiAwayName').textContent = state.ucl.semiAway;
-      document.getElementById('semiAwayScore').textContent = state.ucl.semiAScore;
+      if (state.ucl) {
+        document.getElementById('semiHomeName').textContent = state.ucl.semiHome;
+        document.getElementById('semiHomeScore').textContent = state.ucl.semiHScore;
+        document.getElementById('semiAwayName').textContent = state.ucl.semiAway;
+        document.getElementById('semiAwayScore').textContent = state.ucl.semiAScore;
 
-      document.getElementById('finalHomeName').textContent = state.ucl.finalHome;
-      document.getElementById('finalHomeScore').textContent = state.ucl.finalHScore;
-      document.getElementById('finalAwayName').textContent = state.ucl.finalAway;
-      document.getElementById('finalAwayScore').textContent = state.ucl.finalAScore;
-      document.getElementById('uclWinnerName').textContent = state.ucl.champion;
+        document.getElementById('finalHomeName').textContent = state.ucl.finalHome;
+        document.getElementById('finalHomeScore').textContent = state.ucl.finalHScore;
+        document.getElementById('finalAwayName').textContent = state.ucl.finalAway;
+        document.getElementById('finalAwayScore').textContent = state.ucl.finalAScore;
+        document.getElementById('uclWinnerName').textContent = state.ucl.champion;
+      }
 
-      // 4. FIXTURES & RESULTS
+      // Fixtures
       const fixContainer = document.getElementById('sub-fixtures');
-      fixContainer.innerHTML = state.fixtures.map(f => {
+      fixContainer.innerHTML = (state.fixtures || []).map(f => {
         const isUcl = f.comp === 'ucl';
         return `
           <div class="match-date-header">
@@ -1498,8 +1519,9 @@
         `;
       }).join('') || '<p style="text-align:center; color:var(--muted); padding:20px;">No upcoming fixtures.</p>';
 
+      // Results
       const resContainer = document.getElementById('sub-results');
-      resContainer.innerHTML = state.results.map(r => {
+      resContainer.innerHTML = (state.results || []).map(r => {
         const isUcl = r.comp === 'ucl';
         return `
           <div class="match-date-header">
@@ -1513,7 +1535,7 @@
         `;
       }).join('') || '<p style="text-align:center; color:var(--muted); padding:20px;">No results recorded.</p>';
 
-      // 5. TROPHY CABINETS
+      // Trophies
       const totalSorted = [...state.teams].sort((a,b) => (b.leagueTitles + b.uclTitles) - (a.leagueTitles + a.uclTitles));
       document.getElementById('totalTrophiesBody').innerHTML = totalSorted.map((t, idx) => `
         <tr>
@@ -1541,7 +1563,7 @@
         </tr>
       `).join('');
 
-      // 6. ADMIN POPULATION
+      // Admin Inputs
       const teamOptions = state.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
       document.getElementById('fixtureHomeTeam').innerHTML = teamOptions;
       document.getElementById('fixtureAwayTeam').innerHTML = teamOptions;
@@ -1557,17 +1579,19 @@
 
       loadTrophyCountsForSelectedTeam();
 
-      document.getElementById('setSemiHome').value = state.ucl.semiHome;
-      document.getElementById('setSemiHScore').value = state.ucl.semiHScore;
-      document.getElementById('setSemiAway').value = state.ucl.semiAway;
-      document.getElementById('setSemiAScore').value = state.ucl.semiAScore;
-      document.getElementById('setFinalHome').value = state.ucl.finalHome;
-      document.getElementById('setFinalHScore').value = state.ucl.finalHScore;
-      document.getElementById('setFinalAway').value = state.ucl.finalAway;
-      document.getElementById('setFinalAScore').value = state.ucl.finalAScore;
+      if (state.ucl) {
+        document.getElementById('setSemiHome').value = state.ucl.semiHome;
+        document.getElementById('setSemiHScore').value = state.ucl.semiHScore;
+        document.getElementById('setSemiAway').value = state.ucl.semiAway;
+        document.getElementById('setSemiAScore').value = state.ucl.semiAScore;
+        document.getElementById('setFinalHome').value = state.ucl.finalHome;
+        document.getElementById('setFinalHScore').value = state.ucl.finalHScore;
+        document.getElementById('setFinalAway').value = state.ucl.finalAway;
+        document.getElementById('setFinalAScore').value = state.ucl.finalAScore;
+      }
 
       const adminFixList = document.getElementById('adminFixtureUpdateList');
-      adminFixList.innerHTML = state.fixtures.map((f, i) => `
+      adminFixList.innerHTML = (state.fixtures || []).map((f, i) => `
         <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; margin-bottom:8px;">
           <div style="font-size:11px; font-weight:800; color:${f.comp === 'ucl' ? 'var(--ucl-blue)' : 'var(--accent)'}; margin-bottom:4px; text-transform:uppercase;">
             ${f.comp === 'ucl' ? '⭐ UEFA Champions League' : '🏆 League Match'}
@@ -1583,28 +1607,27 @@
       `).join('') || '<div style="color:var(--muted); font-size:12px;">No matches awaiting score entry.</div>';
     }
 
-    /* Admin Action Functions */
     function updateLeagueName() {
       const val = document.getElementById('adminLeagueNameInput').value.trim();
       if (!val) return alert('Enter a valid league name');
       state.leagueName = val;
       saveState();
-      alert('League name updated successfully!');
+      alert('League name updated live!');
     }
 
     function updateSeasonName() {
       const val = document.getElementById('adminSeasonInput').value.trim();
-      if (!val) return alert('Enter a season name (e.g. Season 2)');
+      if (!val) return alert('Enter a season name');
       state.season = val;
       saveState();
-      alert('Season name updated successfully!');
+      alert('Season name updated live!');
     }
 
     function updatePastChampions() {
       state.lastLeagueChamp = document.getElementById('adminLastLeagueChampInput').value.trim() || 'None';
       state.lastUclChamp = document.getElementById('adminLastUclChampInput').value.trim() || 'None';
       saveState();
-      alert('Past champions updated on Home screen!');
+      alert('Past champions updated live!');
     }
 
     function loadTrophyCountsForSelectedTeam() {
@@ -1624,7 +1647,7 @@
       team.leagueTitles = parseInt(document.getElementById('editLeagueTitlesCount').value) || 0;
       team.uclTitles = parseInt(document.getElementById('editUclTitlesCount').value) || 0;
       saveState();
-      alert(`Trophy counts updated for ${team.name}!`);
+      alert(`Trophies updated live for ${team.name}!`);
     }
 
     function updateUclSpots() {
@@ -1635,25 +1658,26 @@
     function addNewTeam() {
       const name = document.getElementById('adminNewTeamName').value.trim();
       if (!name) return alert('Enter team name');
+      if (!state.teams) state.teams = [];
       state.teams.push({ id: Date.now().toString(), name: name, leagueTitles: 0, uclTitles: 0 });
       document.getElementById('adminNewTeamName').value = '';
       saveState();
-      alert('New club added to the league!');
+      alert('New club added live!');
     }
 
     function deleteSelectedTeam() {
       const teamId = document.getElementById('adminDeleteTeamSelect').value;
-      if (!teamId) return alert('No team selected to delete.');
+      if (!teamId) return alert('No team selected.');
 
       const teamObj = state.teams.find(t => t.id === teamId);
-      if (!confirm(`Are you sure you want to delete ${teamObj.name}?`)) return;
+      if (!confirm(`Delete ${teamObj.name}?`)) return;
 
       state.teams = state.teams.filter(t => t.id !== teamId);
-      state.fixtures = state.fixtures.filter(f => f.homeId !== teamId && f.awayId !== teamId);
-      state.results = state.results.filter(r => r.homeId !== teamId && r.awayId !== teamId);
+      state.fixtures = (state.fixtures || []).filter(f => f.homeId !== teamId && f.awayId !== teamId);
+      state.results = (state.results || []).filter(r => r.homeId !== teamId && r.awayId !== teamId);
 
       saveState();
-      alert('Team removed successfully!');
+      alert('Team removed live!');
     }
 
     function scheduleFixture() {
@@ -1663,10 +1687,11 @@
       const t = document.getElementById('fixtureDateInput').value.trim();
       if (h === a) return alert('Cannot match a team against itself!');
 
+      if (!state.fixtures) state.fixtures = [];
       state.fixtures.push({ id: Date.now().toString(), comp: comp, homeId: h, awayId: a, time: t || 'Upcoming' });
       document.getElementById('fixtureDateInput').value = '';
       saveState();
-      alert('Fixture scheduled successfully!');
+      alert('Fixture scheduled live!');
     }
 
     function submitMatchScore(index) {
@@ -1674,6 +1699,7 @@
       const as = document.getElementById('aScore_' + index).value;
       if (hs === '' || as === '') return alert('Enter valid scores.');
 
+      if (!state.results) state.results = [];
       const f = state.fixtures[index];
       state.results.unshift({
         id: Date.now().toString(),
@@ -1687,10 +1713,11 @@
 
       state.fixtures.splice(index, 1);
       saveState();
-      alert('Match result updated!');
+      alert('Result submitted and synced!');
     }
 
     function updateUclKnockouts() {
+      if (!state.ucl) state.ucl = {};
       state.ucl.semiHome = document.getElementById('setSemiHome').value || 'Real';
       state.ucl.semiHScore = parseInt(document.getElementById('setSemiHScore').value) || 0;
       state.ucl.semiAway = document.getElementById('setSemiAway').value || 'Monaco';
@@ -1709,7 +1736,7 @@
       }
 
       saveState();
-      alert(`UCL Trophy awarded to ${state.ucl.champion}! Added to UCL Titles.`);
+      alert(`UCL Trophy crowned to ${state.ucl.champion} and synced live!`);
     }
 
     function finishCurrentSeason() {
@@ -1717,7 +1744,7 @@
       if (table.length === 0) return;
       const winner = table[0];
 
-      if (!confirm(`Crown ${winner.name} as League Champion and finish ${state.season}?`)) return;
+      if (!confirm(`Crown ${winner.name} as Champion and end ${state.season}?`)) return;
 
       const teamObj = state.teams.find(t => t.id === winner.id);
       if (teamObj) teamObj.leagueTitles++;
@@ -1726,7 +1753,7 @@
       state.results = [];
       state.fixtures = [];
       saveState();
-      alert(`Season finalized! 🏆 ${winner.name} was crowned League Champion!`);
+      alert(`Season finalized! 🏆 ${winner.name} crowned champion and synced live!`);
     }
 
     function restartLeagueData() {
@@ -1734,10 +1761,8 @@
       state.results = [];
       state.fixtures = [];
       saveState();
-      alert('League reset successfully!');
+      alert('League reset live!');
     }
-
-    window.onload = loadState;
   </script>
 </body>
 </html>
