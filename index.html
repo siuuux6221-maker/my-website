@@ -70,6 +70,7 @@
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 var(--glass-shine);
       padding: 14px 20px;
       text-align: center;
+      position: relative;
     }
 
     .website-name {
@@ -99,6 +100,33 @@
       background: var(--win);
       border-radius: 50%;
       box-shadow: 0 0 8px var(--win);
+    }
+
+    /* TOP RIGHT UCL MUSIC TOGGLE BUTTON */
+    .ucl-music-toggle-btn {
+      display: none;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid var(--ucl-blue);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 12px var(--ucl-glow);
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ucl-music-toggle-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
     }
 
     .content-area {
@@ -755,14 +783,21 @@
 </head>
 <body>
 
-  <!-- UCL Anthem Audio Player -->
+  <!-- UCL Anthem Audio Player (NO REPEAT: loop is removed) -->
   <audio id="uclAnthemAudio" preload="auto">
+    <source src="anthem.mp3" type="audio/mpeg">
     <source src="https://ia800902.us.archive.org/27/items/uefa-champions-league-anthem/uefa-champions-league-anthem.mp3" type="audio/mpeg">
   </audio>
 
   <header>
     <div class="website-name">CCNN Esport</div>
     <div class="live-indicator"><span class="live-dot"></span> LIVE SYNC</div>
+
+    <!-- Play/Pause Button on Top Right (Only shown in UCL tab) -->
+    <button id="uclMusicBtn" class="ucl-music-toggle-btn" onclick="toggleUclMusic()">
+      <span id="musicBtnIcon">⏸</span>
+      <span id="musicBtnText">Pause</span>
+    </button>
   </header>
 
   <main class="content-area">
@@ -954,7 +989,6 @@
           </div>
         </div>
 
-        <!-- REALISTIC UCL TROPHY IMAGE LINKED DIRECTLY FROM GITHUB REPOSITORY -->
         <div class="ucl-trophy-podium">
           <img src="ucl-trophy.png" alt="UCL Trophy" style="width: 140px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 0 25px rgba(59, 130, 246, 0.6));">
           <div class="podium-winner-name" id="uclWinnerName">Real Madrid</div>
@@ -1297,6 +1331,40 @@
       stateRef.set(state);
     }
 
+    // MUSIC CONTROL LOGIC
+    const uclAudio = document.getElementById('uclAnthemAudio');
+    const uclMusicBtn = document.getElementById('uclMusicBtn');
+    const musicBtnIcon = document.getElementById('musicBtnIcon');
+    const musicBtnText = document.getElementById('musicBtnText');
+
+    function updateMusicButtonUI() {
+      if (uclAudio && !uclAudio.paused) {
+        musicBtnIcon.textContent = "⏸";
+        musicBtnText.textContent = "Pause";
+      } else {
+        musicBtnIcon.textContent = "▶";
+        musicBtnText.textContent = "Play";
+      }
+    }
+
+    function toggleUclMusic() {
+      if (!uclAudio) return;
+      if (uclAudio.paused) {
+        uclAudio.play().then(() => {
+          updateMusicButtonUI();
+        }).catch(e => console.log("Play failed:", e));
+      } else {
+        uclAudio.pause();
+        updateMusicButtonUI();
+      }
+    }
+
+    if (uclAudio) {
+      uclAudio.addEventListener('ended', () => {
+        updateMusicButtonUI();
+      });
+    }
+
     function switchTab(tabKey) {
       if (tabKey === 'admin' && !isAdminUnlocked) {
         const pass = prompt("🔒 Enter Admin Password:");
@@ -1308,13 +1376,23 @@
         }
       }
 
-      const uclAudio = document.getElementById('uclAnthemAudio');
-      if (uclAudio) {
-        if (tabKey === 'ucl') {
+      // UCL Anthem Trigger + Top Button Visibility
+      if (tabKey === 'ucl') {
+        if (uclMusicBtn) uclMusicBtn.style.display = 'inline-flex';
+        if (uclAudio) {
           uclAudio.currentTime = 0;
-          uclAudio.play().catch(e => console.log("Autoplay blocked:", e));
-        } else {
+          uclAudio.play().then(() => {
+            updateMusicButtonUI();
+          }).catch(e => {
+            console.log("Autoplay blocked:", e);
+            updateMusicButtonUI();
+          });
+        }
+      } else {
+        if (uclMusicBtn) uclMusicBtn.style.display = 'none';
+        if (uclAudio) {
           uclAudio.pause();
+          updateMusicButtonUI();
         }
       }
 
