@@ -600,18 +600,18 @@
 
     .ucl-trophy-podium {
       text-align: center;
-      padding: 24px 16px;
-      background: radial-gradient(circle at center, rgba(59, 130, 246, 0.25) 0%, rgba(14, 22, 42, 0.8) 70%);
-      border: 1px solid var(--ucl-blue);
+      padding: 28px 16px;
+      background: radial-gradient(circle at center, rgba(59, 130, 246, 0.22) 0%, rgba(14, 22, 42, 0.85) 75%);
+      border: 1px solid rgba(59, 130, 246, 0.6);
       border-radius: 20px;
       margin-top: 20px;
       box-shadow: 0 0 35px var(--ucl-glow);
     }
 
     .ucl-trophy-svg {
-      width: 90px;
-      height: 90px;
-      filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+      width: 105px;
+      height: 105px;
+      filter: drop-shadow(0 0 16px rgba(0, 229, 255, 0.45));
     }
 
     .podium-winner-name {
@@ -620,12 +620,12 @@
       color: #ffffff;
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-top: 8px;
+      margin-top: 10px;
     }
 
     .podium-champion-badge {
       display: inline-block;
-      margin-top: 4px;
+      margin-top: 5px;
       padding: 4px 14px;
       border-radius: 20px;
       background: linear-gradient(135deg, var(--gold), #f59e0b);
@@ -921,7 +921,7 @@
         <div class="legend-heading" style="color:var(--ucl-blue);">Qualification</div>
         <div class="legend-row">
           <div class="ucl-square"></div>
-          <span>Group champion direct final</span>
+          <span>Group stage winner qualifies to Final</span>
         </div>
       </div>
 
@@ -960,20 +960,54 @@
           </div>
         </div>
 
+        <!-- Official UCL Ol' Big Ears Trophy -->
         <div class="ucl-trophy-podium">
-          <svg class="ucl-trophy-svg" viewBox="0 0 100 100" fill="none">
-            <path d="M30 20 H70 V42 C70 58 58 70 50 70 C42 70 30 58 30 42 Z" fill="url(#trophyGrad)" stroke="#ffd700" stroke-width="2"/>
-            <path d="M30 24 C20 24 16 35 16 46 C16 58 26 62 34 60 L32 55 C26 56 22 52 22 46 C22 38 25 30 30 29 Z" fill="#ffd700"/>
-            <path d="M70 24 C80 24 84 35 84 46 C84 58 74 62 66 60 L68 55 C74 56 78 52 78 46 C78 38 75 30 70 29 Z" fill="#ffd700"/>
-            <rect x="44" y="70" width="12" height="15" fill="#ffd700"/>
-            <path d="M34 85 H66 V92 H34 Z" fill="#e2e8f0" stroke="#ffd700" stroke-width="1.5"/>
+          <svg class="ucl-trophy-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="trophyGrad" x1="30" y1="20" x2="70" y2="70" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#ffffff"/>
-                <stop offset="0.5" stop-color="#cbd5e1"/>
-                <stop offset="1" stop-color="#94a3b8"/>
+              <linearGradient id="silverBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="35%" stop-color="#e2e8f0"/>
+                <stop offset="70%" stop-color="#94a3b8"/>
+                <stop offset="100%" stop-color="#475569"/>
+              </linearGradient>
+              <linearGradient id="silverHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#94a3b8" stop-opacity="0.3"/>
+              </linearGradient>
+              <linearGradient id="handleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#f8fafc"/>
+                <stop offset="50%" stop-color="#cbd5e1"/>
+                <stop offset="100%" stop-color="#64748b"/>
               </linearGradient>
             </defs>
+
+            <!-- Base and Pedestal -->
+            <path d="M42 104 H78 V110 H42 Z" fill="url(#silverBody)" stroke="#334155" stroke-width="1.5"/>
+            <path d="M46 95 H74 L76 104 H44 Z" fill="url(#silverBody)" stroke="#334155" stroke-width="1.5"/>
+            <path d="M54 84 H66 V95 H54 Z" fill="url(#silverBody)" stroke="#334155" stroke-width="1.5"/>
+            <ellipse cx="60" cy="84" rx="9" ry="3" fill="#cbd5e1"/>
+
+            <!-- Fluted Cup Body -->
+            <path d="M38 28 C38 28 35 56 42 74 C46 82 53 84 60 84 C67 84 74 82 78 74 C85 56 82 28 82 28 Z" fill="url(#silverBody)" stroke="#1e293b" stroke-width="1.8"/>
+            <ellipse cx="60" cy="28" rx="22" ry="4" fill="url(#silverHighlight)" stroke="#1e293b" stroke-width="1.2"/>
+            
+            <!-- Interior Bowl Depth -->
+            <ellipse cx="60" cy="28" rx="19" ry="2.5" fill="#334155"/>
+
+            <!-- Center Cup Fluting / Highlights -->
+            <path d="M52 30 C51 50 53 68 56 82" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+            <path d="M60 30 V83" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+            <path d="M68 30 C69 50 67 68 64 82" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+
+            <!-- Iconic Large Curved Left Handle ("Big Ear") -->
+            <path d="M38 31 C22 30 11 44 14 62 C16 75 29 78 41 71 L39 67 C29 72 20 69 18 59 C16 46 25 36 38 36 Z" fill="url(#handleGrad)" stroke="#1e293b" stroke-width="1.4"/>
+            <!-- Iconic Large Curved Right Handle ("Big Ear") -->
+            <path d="M82 31 C98 30 109 44 106 62 C104 75 91 78 79 71 L81 67 C91 72 100 69 102 59 C104 46 95 36 82 36 Z" fill="url(#handleGrad)" stroke="#1e293b" stroke-width="1.4"/>
+
+            <!-- Decorative UEFA Stars Crown Engraving -->
+            <circle cx="60" cy="46" r="3.2" fill="#38bdf8" opacity="0.85"/>
+            <circle cx="53" cy="51" r="2" fill="#38bdf8" opacity="0.75"/>
+            <circle cx="67" cy="51" r="2" fill="#38bdf8" opacity="0.75"/>
           </svg>
           <div class="podium-winner-name" id="uclWinnerName">Real Madrid</div>
           <span class="podium-champion-badge">Champions</span>
@@ -1251,7 +1285,6 @@
   </nav>
 
   <script>
-    // EXACT FIREBASE CREDENTIALS
     const firebaseConfig = {
       apiKey: "AIzaSyBQ9Gt_u581RDoc4OlJ2yC-bk5SFqR-fC8",
       authDomain: "ccnn-esport.firebaseapp.com",
@@ -1298,7 +1331,6 @@
 
     let state = defaultState;
 
-    // Realtime Sync Listener - Updates UI on all devices instantly
     stateRef.on('value', snapshot => {
       const data = snapshot.val();
       if (data) {
@@ -1328,7 +1360,6 @@
         }
       }
 
-      // Handle UCL Anthem Audio
       const uclAudio = document.getElementById('uclAnthemAudio');
       if (uclAudio) {
         if (tabKey === 'ucl') {
@@ -1339,15 +1370,12 @@
         }
       }
 
-      // Hide all tabs and remove all active highlights
       document.querySelectorAll('.view-card').forEach(c => c.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
 
-      // Show selected tab
       const target = document.getElementById('page-' + tabKey);
       if (target) target.classList.add('active');
 
-      // Highlight active button (matches 'fixtures' with 'matches')
       const buttons = document.querySelectorAll('.nav-item');
       buttons.forEach(btn => {
         const btnText = btn.querySelector('span').textContent.toLowerCase().trim();
@@ -1390,8 +1418,10 @@
       return state.teams.find(t => t.id === id) || { name: 'Unknown Club' };
     }
 
-    function calculateStandings() {
-      const standings = state.teams.map(t => ({
+    // Generic calculator filtering by comp type ('league' vs 'ucl')
+    function calculateStandingsForComp(compType, filterTeams = null) {
+      const baseTeams = filterTeams || state.teams;
+      const standings = baseTeams.map(t => ({
         id: t.id,
         name: t.name,
         p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0,
@@ -1400,7 +1430,8 @@
       }));
 
       (state.results || []).forEach(r => {
-        if (r.comp === 'ucl') return;
+        if (r.comp !== compType) return; // Strict competition isolation
+
         const home = standings.find(t => t.id === r.homeId);
         const away = standings.find(t => t.id === r.awayId);
         if (!home || !away) return;
@@ -1444,10 +1475,11 @@
       document.getElementById('leagueSeasonTag').textContent = state.season;
       document.getElementById('uclSpotsLabel').textContent = 'Top ' + state.uclSpots;
 
-      const table = calculateStandings();
+      // League Table strictly counts 'league' comp
+      const leagueTable = calculateStandingsForComp('league');
 
       // Home Leader Hero
-      const leader = table[0] || { name: 'No Team', pts: 0, streak: 0 };
+      const leader = leagueTable[0] || { name: 'No Team', pts: 0, streak: 0 };
       document.getElementById('heroLeaderName').textContent = leader.name;
       document.getElementById('heroLeaderBadge').textContent = leader.name.charAt(0);
       document.getElementById('heroLeaderPts').textContent = leader.pts;
@@ -1458,7 +1490,7 @@
 
       // League Table
       const tbody = document.getElementById('leagueTableBody');
-      tbody.innerHTML = table.map((t, idx) => {
+      tbody.innerHTML = leagueTable.map((t, idx) => {
         const isUcl = idx < state.uclSpots;
         const formHtml = [0,1,2,3,4].map(i => {
           const outcome = t.form[t.form.length - 1 - i];
@@ -1488,10 +1520,12 @@
         `;
       }).join('');
 
-      // UCL Table
+      // UCL Table strictly uses 'ucl' matches for qualified teams
+      const uclQualifiedClubs = leagueTable.slice(0, state.uclSpots);
+      const uclTable = calculateStandingsForComp('ucl', uclQualifiedClubs);
+
       const uclTableBody = document.getElementById('uclGroupTableBody');
-      const uclQualifiedClubs = table.slice(0, state.uclSpots);
-      uclTableBody.innerHTML = uclQualifiedClubs.map((t, idx) => {
+      uclTableBody.innerHTML = uclTable.map((t, idx) => {
         const isGroupChamp = idx === 0;
         const gdClass = t.gd > 0 ? 'gd-positive' : (t.gd < 0 ? 'gd-negative' : '');
         const gdSign = t.gd > 0 ? '+' : '';
@@ -1764,7 +1798,7 @@
     }
 
     function finishCurrentSeason() {
-      const table = calculateStandings();
+      const table = calculateStandingsForComp('league');
       if (table.length === 0) return;
       const winner = table[0];
 
