@@ -144,7 +144,7 @@
     #page-ucl {
       position: relative;
       background: 
-        linear-gradient(rgba(5, 11, 26, 0.85), rgba(4, 8, 20, 0.92)),
+        linear-gradient(rgba(5, 11, 26, 0.75), rgba(4, 8, 20, 0.85)),
         url('ucl-bg.jpg') center/cover no-repeat;
       border: 1px solid rgba(59, 130, 246, 0.3);
       border-radius: 20px;
@@ -593,6 +593,12 @@
       align-self: center;
     }
 
+    /* UCL KNOCKOUT CONTAINER (OUTER BOX REMOVED FOR CLEAN WALLPAPER VIEW) */
+    .ucl-knockout-wrapper {
+      margin-top: 24px;
+      padding: 4px 0;
+    }
+
     .bracket-container {
       display: flex;
       flex-direction: column;
@@ -966,8 +972,9 @@
         </div>
       </div>
 
-      <div class="legend-card" style="margin-top: 20px;">
-        <div class="league-title-label" style="color:var(--ucl-blue); margin-bottom:12px;">🏆 UCL KNOCKOUT STAGE</div>
+      <!-- UCL KNOCKOUT STAGE (OUTER BOX REMOVED) -->
+      <div class="ucl-knockout-wrapper">
+        <div class="league-title-label" style="color:var(--ucl-blue); margin-bottom:14px; font-size:13px;">🏆 UCL KNOCKOUT STAGE</div>
         
         <div class="bracket-container">
           <div>
