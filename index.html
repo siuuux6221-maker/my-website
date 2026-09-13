@@ -593,7 +593,7 @@
       align-self: center;
     }
 
-    /* UCL KNOCKOUT CONTAINER (OUTER BOX REMOVED FOR CLEAN WALLPAPER VIEW) */
+    /* UCL KNOCKOUT CONTAINER */
     .ucl-knockout-wrapper {
       margin-top: 24px;
       padding: 4px 0;
@@ -972,7 +972,7 @@
         </div>
       </div>
 
-      <!-- UCL KNOCKOUT STAGE (OUTER BOX REMOVED) -->
+      <!-- UCL KNOCKOUT STAGE -->
       <div class="ucl-knockout-wrapper">
         <div class="league-title-label" style="color:var(--ucl-blue); margin-bottom:14px; font-size:13px;">🏆 UCL KNOCKOUT STAGE</div>
         
@@ -1084,13 +1084,34 @@
         <button onclick="lockAdmin()" style="background:transparent; border:1px solid var(--loss); color:var(--loss); padding:4px 8px; border-radius:6px; font-size:10px; font-weight:800; cursor:pointer;">LOCK 🔒</button>
       </div>
 
-      <!-- Accordion 1: League & Season Settings -->
+      <!-- 1. ADD TEAM -->
       <div class="admin-accordion">
         <div class="admin-accordion-header" onclick="toggleAccordion(this)">
-          <span>1. League & Season Settings</span>
+          <span>1. Add Team</span>
           <span>▾</span>
         </div>
         <div class="admin-accordion-body open">
+          <div class="form-group">
+            <label>Add Team to League</label>
+            <input type="text" id="adminNewTeamName" placeholder="New Team Name">
+            <button class="btn" onclick="addNewTeam()">Add Club</button>
+          </div>
+
+          <div class="form-group">
+            <label>Delete Team from League</label>
+            <select id="adminDeleteTeamSelect" style="margin-bottom: 6px;"></select>
+            <button class="btn btn-danger" onclick="deleteSelectedTeam()">Remove Team</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. LEAGUE -->
+      <div class="admin-accordion">
+        <div class="admin-accordion-header" onclick="toggleAccordion(this)">
+          <span>2. League</span>
+          <span>▾</span>
+        </div>
+        <div class="admin-accordion-body">
           <div class="form-group">
             <label>League Name</label>
             <input type="text" id="adminLeagueNameInput" placeholder="e.g. CCNN Super League">
@@ -1104,16 +1125,6 @@
           </div>
 
           <div class="form-group">
-            <label>Last Season League Champion</label>
-            <input type="text" id="adminLastLeagueChampInput" placeholder="e.g. Real Madrid">
-          </div>
-          <div class="form-group">
-            <label>Last Season UCL Champion</label>
-            <input type="text" id="adminLastUclChampInput" placeholder="e.g. Real Madrid">
-            <button class="btn" onclick="updatePastChampions()">Save Past Champions</button>
-          </div>
-
-          <div class="form-group">
             <label>UCL Qualification Spots</label>
             <select id="adminUclSpotsSelect" onchange="updateUclSpots()">
               <option value="1">Top 1 Team</option>
@@ -1121,18 +1132,6 @@
               <option value="3">Top 3 Teams</option>
               <option value="4" selected>Top 4 Teams</option>
             </select>
-          </div>
-
-          <div class="form-group">
-            <label>Add Team to League</label>
-            <input type="text" id="adminNewTeamName" placeholder="New Team Name">
-            <button class="btn" onclick="addNewTeam()">Add Club</button>
-          </div>
-
-          <div class="form-group">
-            <label>Delete Team from League</label>
-            <select id="adminDeleteTeamSelect" style="margin-bottom: 6px;"></select>
-            <button class="btn btn-danger" onclick="deleteSelectedTeam()">Remove Team</button>
           </div>
 
           <div class="form-group">
@@ -1147,13 +1146,13 @@
         </div>
       </div>
 
-      <!-- Accordion 2: Fixtures with Competition Chooser -->
+      <!-- 3. MATCH FIXTURES -->
       <div class="admin-accordion">
         <div class="admin-accordion-header" onclick="toggleAccordion(this)">
-          <span>2. Match Fixtures & Scores</span>
+          <span>3. Match Fixtures</span>
           <span>▾</span>
         </div>
-        <div class="admin-accordion-body open">
+        <div class="admin-accordion-body">
           <div class="form-group">
             <label>Competition Type</label>
             <select id="fixtureCompType" style="margin-bottom:6px;">
@@ -1174,10 +1173,10 @@
         </div>
       </div>
 
-      <!-- Accordion 3: UCL Customizer -->
+      <!-- 4. UCL -->
       <div class="admin-accordion">
         <div class="admin-accordion-header" onclick="toggleAccordion(this)">
-          <span>3. UCL Knockouts</span>
+          <span>4. UCL</span>
           <span>▾</span>
         </div>
         <div class="admin-accordion-body">
@@ -1203,10 +1202,10 @@
         </div>
       </div>
 
-      <!-- Accordion 4: Trophy Count Editor -->
+      <!-- 5. TROPHY -->
       <div class="admin-accordion">
         <div class="admin-accordion-header" onclick="toggleAccordion(this)">
-          <span>4. Trophy Count Editor</span>
+          <span>5. Trophy</span>
           <span>▾</span>
         </div>
         <div class="admin-accordion-body">
@@ -1222,6 +1221,25 @@
             <label>UCL Titles Count</label>
             <input type="number" id="editUclTitlesCount" min="0">
             <button class="btn btn-gold" onclick="saveCustomTrophyCounts()">Save Trophy Counts 🏆</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. HOME PAGE -->
+      <div class="admin-accordion">
+        <div class="admin-accordion-header" onclick="toggleAccordion(this)">
+          <span>6. Home Page</span>
+          <span>▾</span>
+        </div>
+        <div class="admin-accordion-body">
+          <div class="form-group">
+            <label>Last Season League Champion</label>
+            <input type="text" id="adminLastLeagueChampInput" placeholder="e.g. Real Madrid">
+          </div>
+          <div class="form-group">
+            <label>Last Season UCL Champion</label>
+            <input type="text" id="adminLastUclChampInput" placeholder="e.g. Real Madrid">
+            <button class="btn" onclick="updatePastChampions()">Save Past Champions</button>
           </div>
         </div>
       </div>
@@ -1657,6 +1675,7 @@
         </tr>
       `).join('');
 
+      // Admin Select & Inputs Populating
       const teamOptions = state.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
       document.getElementById('fixtureHomeTeam').innerHTML = teamOptions;
       document.getElementById('fixtureAwayTeam').innerHTML = teamOptions;
