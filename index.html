@@ -228,7 +228,7 @@
     }
 
     .hero-team-name {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 900;
       color: #fff;
       text-transform: uppercase;
@@ -324,6 +324,125 @@
       margin-top: 6px;
     }
 
+    /* WIN PROBABILITY PREDICTION GRAPH CARD */
+    .prediction-card {
+      background: var(--glass-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 16px 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    .prediction-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .prediction-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    .prediction-subtext {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .prediction-graph-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      min-height: 210px;
+      padding: 10px 4px 4px 4px;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      overflow-x: auto;
+    }
+
+    .graph-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      min-width: 58px;
+      height: 100%;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .graph-logo-slot {
+      margin-bottom: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .graph-logo-slot .team-badge {
+      width: 32px;
+      height: 32px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .graph-team-name {
+      font-size: 10px;
+      font-weight: 800;
+      color: #e2e8f0;
+      text-transform: uppercase;
+      text-align: center;
+      max-width: 60px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .graph-bar-track {
+      width: 32px;
+      height: 130px;
+      background: rgba(7, 12, 24, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
+    }
+
+    .graph-bar-fill {
+      width: 100%;
+      background: linear-gradient(180deg, var(--accent) 0%, rgba(0, 150, 255, 0.8) 100%);
+      border-radius: 7px 7px 0 0;
+      transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      box-shadow: 0 0 14px var(--accent-glow);
+    }
+
+    .graph-bar-fill.leader-bar {
+      background: linear-gradient(180deg, var(--gold) 0%, #f59e0b 100%);
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.5);
+    }
+
+    .graph-percentage-label {
+      font-size: 11px;
+      font-weight: 900;
+      color: #ffffff;
+      text-align: center;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
     .table-card {
       background: var(--glass-card);
       backdrop-filter: blur(16px);
@@ -384,7 +503,6 @@
       font-weight: 700;
     }
 
-    /* BADGE SUPPORT: SVG/IMAGE OR LETTER CIRCLE */
     .team-badge {
       width: 26px;
       height: 26px;
@@ -862,6 +980,19 @@
             <span class="champ-badge-tag" style="color:var(--ucl-blue);">⭐ UCL Winner</span>
           </div>
         </div>
+      </div>
+
+      <!-- PERFORMANCE-BASED WINNING PREDICTION GRAPH -->
+      <div class="prediction-card">
+        <div class="prediction-header">
+          <div>
+            <div class="prediction-title">📊 Title Win Probability</div>
+            <div class="prediction-subtext">Live form & performance analytics</div>
+          </div>
+          <span style="font-size:11px; color:var(--accent); font-weight:800;">100% TOTAL</span>
+        </div>
+        
+        <div class="prediction-graph-container" id="predictionGraphContainer"></div>
       </div>
     </div>
 
@@ -1364,7 +1495,6 @@
         if (!state.results) state.results = [];
         if (!state.ucl) state.ucl = defaultState.ucl;
 
-        // Auto-link uploaded image files for default teams if logo is empty
         state.teams.forEach(t => {
           if (!t.logo) {
             if (t.name.toLowerCase().includes('real madrid')) t.logo = 'real-madrid.png';
@@ -1382,7 +1512,6 @@
       stateRef.set(state);
     }
 
-    // BADGE HELPER FUNCTION: Renders PNG/URL logo or letter fallback
     function renderTeamBadge(team, extraStyle = '') {
       if (team && team.logo) {
         return `<img src="${team.logo}" alt="${team.name}" class="team-badge" style="${extraStyle}" onerror="this.outerHTML='<span class=\\'team-badge\\' style=\\'${extraStyle}\\'>${team.name.charAt(0)}</span>'">`;
@@ -1436,7 +1565,6 @@
         }
       }
 
-      // UCL Anthem Trigger + Top Button Visibility
       if (tabKey === 'ucl') {
         if (uclMusicBtn) uclMusicBtn.style.display = 'inline-flex';
         if (uclAudio) {
@@ -1552,6 +1680,46 @@
       return standings.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
     }
 
+    /* PERFORMANCE-BASED TITLE WIN PROBABILITY ALGORITHM */
+    function calculateTitleProbabilities(leagueStandings) {
+      if (!leagueStandings || leagueStandings.length === 0) return [];
+      
+      const totalPlayed = leagueStandings.reduce((sum, t) => sum + t.p, 0);
+      if (totalPlayed === 0) {
+        const equalPct = Math.round(100 / leagueStandings.length);
+        return leagueStandings.map(t => ({ ...t, probability: equalPct }));
+      }
+
+      // Performance weights: Base (10) + PTS*4 + GD*1.5 + Form bonus (W=3, D=1, L=-2) + Win streak*3
+      const scoredTeams = leagueStandings.map(t => {
+        let formScore = 0;
+        t.form.forEach(f => {
+          if (f === 'W') formScore += 3;
+          else if (f === 'D') formScore += 1;
+          else if (f === 'L') formScore -= 2;
+        });
+
+        let rawPower = 10 + (t.pts * 4) + (t.gd * 1.5) + formScore + (t.streak * 3);
+        if (rawPower < 2) rawPower = 2; // Keep positive minimum floor
+        return { ...t, rawPower };
+      });
+
+      const totalPower = scoredTeams.reduce((sum, t) => sum + t.rawPower, 0);
+      let sumPct = 0;
+
+      const probabilities = scoredTeams.map((t, idx) => {
+        let pct = Math.round((t.rawPower / totalPower) * 100);
+        if (idx === scoredTeams.length - 1) {
+          pct = Math.max(1, 100 - sumPct); // Ensure clean 100% total
+        } else {
+          sumPct += pct;
+        }
+        return { ...t, probability: pct };
+      });
+
+      return probabilities;
+    }
+
     function renderAll() {
       document.querySelectorAll('.current-league-tag').forEach(tag => {
         tag.textContent = '🏆 ' + (state.leagueName || 'LEAGUE').toUpperCase();
@@ -1563,6 +1731,7 @@
 
       const leagueTable = calculateStandingsForComp('league');
 
+      // Home Leader Card
       const leader = leagueTable[0] || { name: 'No Team', logo: '', pts: 0, streak: 0 };
       document.getElementById('heroLeaderName').textContent = leader.name;
       document.getElementById('heroLeaderBadge').innerHTML = renderTeamBadge(leader);
@@ -1572,6 +1741,32 @@
       document.getElementById('homeLastLeagueChamp').textContent = state.lastLeagueChamp || '--';
       document.getElementById('homeLastUclChamp').textContent = state.lastUclChamp || '--';
 
+      // RENDER WIN PROBABILITY GRAPH IN HOME TAB
+      const predictions = calculateTitleProbabilities(leagueTable);
+      const graphContainer = document.getElementById('predictionGraphContainer');
+      if (predictions.length > 0) {
+        const maxProb = Math.max(...predictions.map(p => p.probability), 1);
+        graphContainer.innerHTML = predictions.map((t, idx) => {
+          const barHeightPx = Math.max(12, Math.round((t.probability / maxProb) * 115));
+          const isLeader = idx === 0 && t.probability > 0;
+          return `
+            <div class="graph-column">
+              <div class="graph-logo-slot">
+                ${renderTeamBadge(t)}
+                <span class="graph-team-name">${t.name}</span>
+              </div>
+              <div class="graph-bar-track">
+                <div class="graph-bar-fill ${isLeader ? 'leader-bar' : ''}" style="height: ${barHeightPx}px;"></div>
+              </div>
+              <span class="graph-percentage-label" style="color: ${isLeader ? 'var(--gold)' : 'var(--accent)'};">${t.probability}%</span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        graphContainer.innerHTML = `<div style="color:var(--muted); font-size:12px; margin:auto;">Add teams to generate predictions</div>`;
+      }
+
+      // League Table
       const tbody = document.getElementById('leagueTableBody');
       tbody.innerHTML = leagueTable.map((t, idx) => {
         const isUcl = idx < state.uclSpots;
@@ -1603,6 +1798,7 @@
         `;
       }).join('');
 
+      // UCL Table
       const uclQualifiedClubs = leagueTable.slice(0, state.uclSpots);
       const uclTable = calculateStandingsForComp('ucl', uclQualifiedClubs);
 
@@ -1628,6 +1824,7 @@
         `;
       }).join('') || '<tr><td colspan="10" style="padding:14px; color:var(--muted);">No teams in group stage.</td></tr>';
 
+      // UCL Knockouts
       if (state.ucl) {
         document.getElementById('semiHomeName').textContent = state.ucl.semiHome;
         document.getElementById('semiHomeScore').textContent = state.ucl.semiHScore;
@@ -1641,6 +1838,7 @@
         document.getElementById('uclWinnerName').textContent = state.ucl.champion;
       }
 
+      // Fixtures
       const fixContainer = document.getElementById('sub-fixtures');
       fixContainer.innerHTML = (state.fixtures || []).map(f => {
         const isUcl = f.comp === 'ucl';
@@ -1659,6 +1857,7 @@
         `;
       }).join('') || '<p style="text-align:center; color:var(--muted); padding:20px;">No upcoming fixtures.</p>';
 
+      // Results
       const resContainer = document.getElementById('sub-results');
       resContainer.innerHTML = (state.results || []).map(r => {
         const isUcl = r.comp === 'ucl';
@@ -1676,6 +1875,7 @@
         `;
       }).join('') || '<p style="text-align:center; color:var(--muted); padding:20px;">No results recorded.</p>';
 
+      // Trophies
       const totalSorted = [...state.teams].sort((a,b) => (b.leagueTitles + b.uclTitles) - (a.leagueTitles + a.uclTitles));
       document.getElementById('totalTrophiesBody').innerHTML = totalSorted.map((t, idx) => `
         <tr>
@@ -1703,7 +1903,7 @@
         </tr>
       `).join('');
 
-      // Admin Inputs Populating
+      // Admin Select & Inputs Populating
       const teamOptions = state.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
       document.getElementById('fixtureHomeTeam').innerHTML = teamOptions;
       document.getElementById('fixtureAwayTeam').innerHTML = teamOptions;
