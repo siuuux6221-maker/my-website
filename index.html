@@ -123,12 +123,6 @@
       gap: 6px;
     }
 
-    .ucl-music-toggle-btn svg {
-      width: 14px;
-      height: 14px;
-      fill: currentColor;
-    }
-
     .content-area {
       position: relative;
       z-index: 1;
@@ -390,6 +384,7 @@
       font-weight: 700;
     }
 
+    /* BADGE SUPPORT: SVG/IMAGE OR LETTER CIRCLE */
     .team-badge {
       width: 26px;
       height: 26px;
@@ -402,6 +397,8 @@
       font-size: 11px;
       font-weight: 800;
       color: #fff;
+      object-fit: cover;
+      flex-shrink: 0;
     }
 
     .pts-col {
@@ -834,7 +831,7 @@
         <div class="hero-label">Current Leader</div>
         <div class="hero-row">
           <div class="hero-team-name">
-            <span class="team-badge" id="heroLeaderBadge">S</span>
+            <span id="heroLeaderBadge"></span>
             <span id="heroLeaderName">Sparta FC</span>
           </div>
           <div class="hero-stats-right">
@@ -1092,12 +1089,20 @@
         </div>
         <div class="admin-accordion-body open">
           <div class="form-group">
-            <label>Add Team to League</label>
-            <input type="text" id="adminNewTeamName" placeholder="New Team Name">
+            <label>Add New Team</label>
+            <input type="text" id="adminNewTeamName" placeholder="Club Name (e.g. Arsenal)" style="margin-bottom:6px;">
+            <input type="text" id="adminNewTeamLogo" placeholder="Logo filename (e.g. arsenal.png or URL)">
             <button class="btn" onclick="addNewTeam()">Add Club</button>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+            <label>Update Team Logo</label>
+            <select id="adminEditLogoTeamSelect" onchange="loadLogoForSelectedTeam()" style="margin-bottom: 6px;"></select>
+            <input type="text" id="adminEditTeamLogoInput" placeholder="Filename (e.g. real-madrid.png)">
+            <button class="btn" onclick="saveUpdatedTeamLogo()">Update Logo</button>
+          </div>
+
+          <div class="form-group" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
             <label>Delete Team from League</label>
             <select id="adminDeleteTeamSelect" style="margin-bottom: 6px;"></select>
             <button class="btn btn-danger" onclick="deleteSelectedTeam()">Remove Team</button>
@@ -1327,11 +1332,11 @@
       lastUclChamp: 'Real Madrid',
       uclSpots: 4,
       teams: [
-        { id: '1', name: 'Sparta FC', leagueTitles: 0, uclTitles: 0 },
-        { id: '2', name: 'Titan SC', leagueTitles: 0, uclTitles: 0 },
-        { id: '3', name: 'Real Madrid', leagueTitles: 4, uclTitles: 15 },
-        { id: '4', name: 'Japan', leagueTitles: 1, uclTitles: 0 },
-        { id: '5', name: 'Liverpool', leagueTitles: 1, uclTitles: 0 }
+        { id: '1', name: 'Sparta FC', logo: '', leagueTitles: 0, uclTitles: 0 },
+        { id: '2', name: 'Titan SC', logo: '', leagueTitles: 0, uclTitles: 0 },
+        { id: '3', name: 'Real Madrid', logo: 'real-madrid.png', leagueTitles: 4, uclTitles: 15 },
+        { id: '4', name: 'Japan', logo: 'Japan.png', leagueTitles: 1, uclTitles: 0 },
+        { id: '5', name: 'Liverpool', logo: 'Liverpool.png', leagueTitles: 1, uclTitles: 0 }
       ],
       fixtures: [],
       results: [],
@@ -1358,6 +1363,15 @@
         if (!state.fixtures) state.fixtures = [];
         if (!state.results) state.results = [];
         if (!state.ucl) state.ucl = defaultState.ucl;
+
+        // Auto-link uploaded image files for default teams if logo is empty
+        state.teams.forEach(t => {
+          if (!t.logo) {
+            if (t.name.toLowerCase().includes('real madrid')) t.logo = 'real-madrid.png';
+            if (t.name.toLowerCase().includes('liverpool')) t.logo = 'Liverpool.png';
+            if (t.name.toLowerCase().includes('japan')) t.logo = 'Japan.png';
+          }
+        });
       } else {
         stateRef.set(defaultState);
       }
@@ -1366,6 +1380,15 @@
 
     function saveState() {
       stateRef.set(state);
+    }
+
+    // BADGE HELPER FUNCTION: Renders PNG/URL logo or letter fallback
+    function renderTeamBadge(team, extraStyle = '') {
+      if (team && team.logo) {
+        return `<img src="${team.logo}" alt="${team.name}" class="team-badge" style="${extraStyle}" onerror="this.outerHTML='<span class=\\'team-badge\\' style=\\'${extraStyle}\\'>${team.name.charAt(0)}</span>'">`;
+      }
+      const initial = team && team.name ? team.name.charAt(0) : '?';
+      return `<span class="team-badge" style="${extraStyle}">${initial}</span>`;
     }
 
     // MUSIC CONTROL LOGIC
@@ -1478,7 +1501,7 @@
     }
 
     function getTeam(id) {
-      return state.teams.find(t => t.id === id) || { name: 'Unknown Club' };
+      return state.teams.find(t => t.id === id) || { name: 'Unknown Club', logo: '' };
     }
 
     function calculateStandingsForComp(compType, filterTeams = null) {
@@ -1486,6 +1509,7 @@
       const standings = baseTeams.map(t => ({
         id: t.id,
         name: t.name,
+        logo: t.logo || '',
         p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0,
         form: [],
         streak: 0
@@ -1539,9 +1563,9 @@
 
       const leagueTable = calculateStandingsForComp('league');
 
-      const leader = leagueTable[0] || { name: 'No Team', pts: 0, streak: 0 };
+      const leader = leagueTable[0] || { name: 'No Team', logo: '', pts: 0, streak: 0 };
       document.getElementById('heroLeaderName').textContent = leader.name;
-      document.getElementById('heroLeaderBadge').textContent = leader.name.charAt(0);
+      document.getElementById('heroLeaderBadge').innerHTML = renderTeamBadge(leader);
       document.getElementById('heroLeaderPts').textContent = leader.pts;
       document.getElementById('heroLeaderStreak').textContent = leader.streak > 0 ? `🔥 ${leader.streak}W Streak` : `⚪ 0W Streak`;
 
@@ -1565,7 +1589,7 @@
         return `
           <tr class="${isUcl ? 'ucl-qualify' : ''}">
             <td>${idx + 1}</td>
-            <td class="team-col"><span class="team-badge">${t.name.charAt(0)}</span><span>${t.name}</span></td>
+            <td class="team-col">${renderTeamBadge(t)}<span>${t.name}</span></td>
             <td>${t.p}</td>
             <td>${t.w}</td>
             <td>${t.d}</td>
@@ -1591,7 +1615,7 @@
         return `
           <tr class="${isGroupChamp ? 'ucl-qualify' : ''}">
             <td>${idx + 1}</td>
-            <td class="team-col"><span class="team-badge" style="border-color:var(--ucl-blue);">${t.name.charAt(0)}</span><span>${t.name}</span></td>
+            <td class="team-col">${renderTeamBadge(t, 'border-color:var(--ucl-blue);')}<span>${t.name}</span></td>
             <td>${t.p}</td>
             <td>${t.w}</td>
             <td>${t.d}</td>
@@ -1620,15 +1644,17 @@
       const fixContainer = document.getElementById('sub-fixtures');
       fixContainer.innerHTML = (state.fixtures || []).map(f => {
         const isUcl = f.comp === 'ucl';
+        const hTeam = getTeam(f.homeId);
+        const aTeam = getTeam(f.awayId);
         return `
           <div class="match-date-header">
             <span>${f.time}</span>
             <span class="comp-pill ${isUcl ? 'comp-ucl' : 'comp-league'}">${isUcl ? 'UCL Match' : 'League Match'}</span>
           </div>
           <div class="match-glass-card" style="${isUcl ? 'border-color:rgba(59,130,246,0.4);' : ''}">
-            <div class="team-row"><div class="team-info"><span class="team-badge" style="${isUcl ? 'border-color:var(--ucl-blue);' : ''}">${getTeam(f.homeId).name.charAt(0)}</span><span>${getTeam(f.homeId).name}</span></div><span class="score-box">-</span></div>
+            <div class="team-row"><div class="team-info">${renderTeamBadge(hTeam, isUcl ? 'border-color:var(--ucl-blue);' : '')}<span>${hTeam.name}</span></div><span class="score-box">-</span></div>
             <span class="vs-pill" style="${isUcl ? 'color:var(--ucl-blue); border-color:var(--ucl-blue); background:rgba(59,130,246,0.1);' : ''}">VS</span>
-            <div class="team-row"><div class="team-info"><span class="team-badge" style="${isUcl ? 'border-color:var(--ucl-blue);' : ''}">${getTeam(f.awayId).name.charAt(0)}</span><span>${getTeam(f.awayId).name}</span></div><span class="score-box">-</span></div>
+            <div class="team-row"><div class="team-info">${renderTeamBadge(aTeam, isUcl ? 'border-color:var(--ucl-blue);' : '')}<span>${aTeam.name}</span></div><span class="score-box">-</span></div>
           </div>
         `;
       }).join('') || '<p style="text-align:center; color:var(--muted); padding:20px;">No upcoming fixtures.</p>';
@@ -1636,14 +1662,16 @@
       const resContainer = document.getElementById('sub-results');
       resContainer.innerHTML = (state.results || []).map(r => {
         const isUcl = r.comp === 'ucl';
+        const hTeam = getTeam(r.homeId);
+        const aTeam = getTeam(r.awayId);
         return `
           <div class="match-date-header">
             <span style="color:var(--win);">${r.time}</span>
             <span class="comp-pill ${isUcl ? 'comp-ucl' : 'comp-league'}">${isUcl ? 'UCL' : 'League'}</span>
           </div>
           <div class="match-glass-card">
-            <div class="team-row"><div class="team-info"><span class="team-badge">${getTeam(r.homeId).name.charAt(0)}</span><span>${getTeam(r.homeId).name}</span></div><span class="score-box ${r.hScore > r.aScore ? 'winner' : ''}">${r.hScore}</span></div>
-            <div class="team-row"><div class="team-info"><span class="team-badge">${getTeam(r.awayId).name.charAt(0)}</span><span>${getTeam(r.awayId).name}</span></div><span class="score-box ${r.aScore > r.hScore ? 'winner' : ''}">${r.aScore}</span></div>
+            <div class="team-row"><div class="team-info">${renderTeamBadge(hTeam)}<span>${hTeam.name}</span></div><span class="score-box ${r.hScore > r.aScore ? 'winner' : ''}">${r.hScore}</span></div>
+            <div class="team-row"><div class="team-info">${renderTeamBadge(aTeam)}<span>${aTeam.name}</span></div><span class="score-box ${r.aScore > r.hScore ? 'winner' : ''}">${r.aScore}</span></div>
           </div>
         `;
       }).join('') || '<p style="text-align:center; color:var(--muted); padding:20px;">No results recorded.</p>';
@@ -1652,7 +1680,7 @@
       document.getElementById('totalTrophiesBody').innerHTML = totalSorted.map((t, idx) => `
         <tr>
           <td>${idx + 1}</td>
-          <td class="team-col"><span class="team-badge">${t.name.charAt(0)}</span><span>${t.name}</span></td>
+          <td class="team-col">${renderTeamBadge(t)}<span>${t.name}</span></td>
           <td style="color:var(--accent); font-weight:900; font-size:14px;">🏆 ${t.leagueTitles + t.uclTitles}</td>
         </tr>
       `).join('');
@@ -1661,7 +1689,7 @@
       document.getElementById('leagueTitlesBody').innerHTML = leagueSorted.map((t, idx) => `
         <tr>
           <td>${idx + 1}</td>
-          <td class="team-col"><span class="team-badge">${t.name.charAt(0)}</span><span>${t.name}</span></td>
+          <td class="team-col">${renderTeamBadge(t)}<span>${t.name}</span></td>
           <td style="color:var(--gold); font-weight:900; font-size:14px;">🥇 ${t.leagueTitles}</td>
         </tr>
       `).join('');
@@ -1670,16 +1698,17 @@
       document.getElementById('uclTitlesBody').innerHTML = uclSorted.map((t, idx) => `
         <tr>
           <td>${idx + 1}</td>
-          <td class="team-col"><span class="team-badge" style="border-color:var(--ucl-blue);">${t.name.charAt(0)}</span><span>${t.name}</span></td>
+          <td class="team-col">${renderTeamBadge(t, 'border-color:var(--ucl-blue);')}<span>${t.name}</span></td>
           <td style="color:var(--ucl-blue); font-weight:900; font-size:14px;">⭐ ${t.uclTitles}</td>
         </tr>
       `).join('');
 
-      // Admin Select & Inputs Populating
+      // Admin Inputs Populating
       const teamOptions = state.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
       document.getElementById('fixtureHomeTeam').innerHTML = teamOptions;
       document.getElementById('fixtureAwayTeam').innerHTML = teamOptions;
       document.getElementById('adminDeleteTeamSelect').innerHTML = teamOptions;
+      document.getElementById('adminEditLogoTeamSelect').innerHTML = teamOptions;
       document.getElementById('setUclChampSelect').innerHTML = teamOptions;
       document.getElementById('trophyEditTeamSelect').innerHTML = teamOptions;
 
@@ -1689,6 +1718,7 @@
       document.getElementById('adminLastLeagueChampInput').value = state.lastLeagueChamp;
       document.getElementById('adminLastUclChampInput').value = state.lastUclChamp;
 
+      loadLogoForSelectedTeam();
       loadTrophyCountsForSelectedTeam();
 
       if (state.ucl) {
@@ -1742,6 +1772,24 @@
       alert('Past champions updated live!');
     }
 
+    function loadLogoForSelectedTeam() {
+      const selId = document.getElementById('adminEditLogoTeamSelect').value;
+      const team = state.teams.find(t => t.id === selId);
+      if (team) {
+        document.getElementById('adminEditTeamLogoInput').value = team.logo || '';
+      }
+    }
+
+    function saveUpdatedTeamLogo() {
+      const selId = document.getElementById('adminEditLogoTeamSelect').value;
+      const team = state.teams.find(t => t.id === selId);
+      if (!team) return;
+
+      team.logo = document.getElementById('adminEditTeamLogoInput').value.trim();
+      saveState();
+      alert(`Logo updated live for ${team.name}!`);
+    }
+
     function loadTrophyCountsForSelectedTeam() {
       const selId = document.getElementById('trophyEditTeamSelect').value;
       const team = state.teams.find(t => t.id === selId);
@@ -1769,10 +1817,18 @@
 
     function addNewTeam() {
       const name = document.getElementById('adminNewTeamName').value.trim();
+      const logo = document.getElementById('adminNewTeamLogo').value.trim();
       if (!name) return alert('Enter team name');
       if (!state.teams) state.teams = [];
-      state.teams.push({ id: Date.now().toString(), name: name, leagueTitles: 0, uclTitles: 0 });
+      state.teams.push({ 
+        id: Date.now().toString(), 
+        name: name, 
+        logo: logo || '', 
+        leagueTitles: 0, 
+        uclTitles: 0 
+      });
       document.getElementById('adminNewTeamName').value = '';
+      document.getElementById('adminNewTeamLogo').value = '';
       saveState();
       alert('New club added live!');
     }
